@@ -1,0 +1,16 @@
+{
+    "gameloop": {
+        "round": 2,
+        "join": false,
+        "sub": false,
+        "review": false
+    },
+    "ids": {
+        "subChannel": 1488288670820860006,
+        "subMsg": 1488288673245167676
+    },
+    "players": {
+        "playerNum": 2,
+        "subNum": 1
+    }
+}
