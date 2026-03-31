@@ -6,6 +6,30 @@ import logging
 from dotenv import load_dotenv
 import os
 
+async def updateReviewEmbed(x):
+    channel = bot.get_channel(data["players"][x]["reviewChannel"])
+    review_index = data["players"][x]["reviewIndex"]
+    submitter = data["order"][review_index]
+    if submitter == x:
+        data["players"][x]["reviewIndex"] += 1
+        submitter = data["order"][review_index + 1]
+    embed = discord.Embed(colour=Colour.blue(),
+                          title=f"Review Phase! (Song {data["players"][x]["reviewsDone"]}/{data["players"]["playerNum"] - 1})",
+                          url=data["players"][submitter]["sub"]["link"])
+    embed.add_field(name="Submitter", value=f"```{bot.get_user(int(submitter)).global_name}```", inline=True)
+    embed.add_field(name="Song",
+                    value=f"```{data["players"][submitter]["sub"]["artist"]} - {data["players"][submitter]["sub"]["titel"]}```",
+                    inline=True)
+    embed.add_field(name="Link", value=f"```{data["players"][submitter]["sub"]["link"]}```", inline=False)
+    embed.add_field(name="Instructions",
+                    value=f"```Please send your thoughts and feelings about the song in a single message below.\nThis will be used as your review text later!```",
+                    inline=False)
+    if bot.get_user(int(submitter)).avatar is not None:
+        embed.set_thumbnail(url=bot.get_user(int(submitter)).avatar.url)
+    message = await channel.fetch_message(data["players"][x]["reviewMsg"])
+    await message.edit(embed=embed)
+    data["reviews"][x][submitter] = {}
+
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 
@@ -31,7 +55,11 @@ async def on_message(message):
     #Submission Phase
 
     if message.channel.id == data["ids"]["subChannel"]:
-        data["players"][str(message.author.id)]["sub"] = message.content
+        data["players"][str(message.author.id)]["sub"] = {}
+        sub = message.content.split(" - ")
+        data["players"][str(message.author.id)]["sub"]["artist"] = sub[0]
+        data["players"][str(message.author.id)]["sub"]["titel"] = sub[1]
+        data["players"][str(message.author.id)]["sub"]["link"] = sub[2]
         data["players"]["subNum"] += 1
         with open("database.json", "w") as filee:
             json.dump(data, filee, indent=4)
@@ -42,7 +70,7 @@ async def on_message(message):
         message = await message.channel.fetch_message(data["ids"]["subMsg"])
         embed_edit = discord.Embed(colour=Colour.blue(), title="The Submission Phase Has Started!")
         embed_edit.add_field(name="",
-                        value="```\nPlease send in the YouTube link of the song you want to submit!\nYou can only submit one song and cannot change it afterwards\nSo choose carefully!\n```",
+                        value="```\nPlease send the song you wanna submit in the following style:\n[Artist] - [Titel] - [YouTube link]\nYou can only submit one song and cannot change it afterwards\nSo choose carefully!\n```",
                         inline=True)
         embed_edit.add_field(name="Submissions", value=f"**```ml\n{data["players"]["subNum"]}/{data["players"]["playerNum"]}\n```**", inline=False)
         await message.edit(embed=embed_edit)
@@ -51,13 +79,17 @@ async def on_message(message):
             role = bot.get_guild(1487902534545703072).get_role(1487952220208107742)
             for x in data["players"]:
                 if x != "playerNum" and x != "subNum":
+                    data["order"].append(x)
+                    data["players"][x]["reviewIndex"] = 0
                     user = bot.get_user(int(x))
                     overwrites = {
                         user: discord.PermissionOverwrite(read_messages=True),
                         bot.get_guild(1487902534545703072).default_role: discord.PermissionOverwrite(read_messages=False)
                     }
-                    channel = await message.channel.category.create_text_channel(f"{user.name}-reviews", overwrites=overwrites)
-                    data["players"][x]["reviewCannel"] = channel.id
+                    channel = await message.channel.category.create_text_channel(f"{user.global_name}-reviews", overwrites=overwrites)
+                    data["players"][x]["reviewChannel"] = channel.id
+                    data["players"][x]["reviewsDone"] = 0
+                    data["reviews"][x] = {}
             await message.channel.send(f"{role.mention}")
             embed = discord.Embed(colour=Colour.blue() ,title="Every Player Submitted Their Song!")
             embed.add_field(name="", value="```\nBelow this channel you should now see a channel called \n[Your Name]-reviews\nGo there for further information!\n```", inline=False)
@@ -67,8 +99,50 @@ async def on_message(message):
             with open("database.json", "w") as filee:
                 json.dump(data, filee, indent=4)
 
-    #Review Phase
 
+    #Review Phase
+            for x in data["players"]:
+                if x == "playerNum" or x == "subNum":
+                    continue
+                channel = bot.get_channel(data["players"][x]["reviewChannel"])
+                review_index = data["players"][x]["reviewIndex"]
+                submitter = data["order"][review_index]
+                if submitter == x:
+                    data["players"][x]["reviewIndex"] += 1
+                    submitter = data["order"][review_index + 1]
+                embed = discord.Embed(colour=Colour.blue(), title=f"Review Phase! (Song {data["players"][x]["reviewsDone"]}/{data["players"]["playerNum"] - 1})", url=data["players"][submitter]["sub"]["link"])
+                embed.add_field(name="Submitter", value=f"```{bot.get_user(int(submitter)).global_name}```", inline=True)
+                embed.add_field(name="Song", value=f"```{data["players"][submitter]["sub"]["artist"]} - {data["players"][submitter]["sub"]["titel"]}```", inline=True)
+                embed.add_field(name="Link", value=f"```{data["players"][submitter]["sub"]["link"]}```", inline=False)
+                embed.add_field(name="Instructions", value=f"```Please send your thoughts and feelings about the song in a single message below.\nThis will be used as your review text later!```", inline=False)
+                if bot.get_user(int(submitter)).avatar is not None:
+                    embed.set_thumbnail(url=bot.get_user(int(submitter)).avatar.url)
+                embed_msg = await channel.send(embed=embed)
+                data["players"][x]["reviewMsg"] = embed_msg.id
+                data["reviews"][x][submitter] = {}
+
+                with open("database.json", "w") as filee:
+                    json.dump(data, filee, indent=4)
+
+    elif message.channel.category_id == 1487953481422602340 and message.channel.id != 1487958792527413418:
+        author = str(message.author.id)
+        submitter = data["order"][data["players"][author]["reviewIndex"]]
+
+        data["reviews"][author][submitter]["text"] = message.content
+        await message.delete()
+        await message.channel.send("Review saved!", delete_after=3)
+        data["players"][author]["reviewIndex"] += 1
+        data["players"][author]["reviewsDone"] += 1
+
+        if data["players"][author]["reviewsDone"] != data["players"]["playerNum"] - 1:
+            await updateReviewEmbed(author)
+        else:
+            embed = discord.Embed(colour=Colour.blue(), title="Rating Phase!", description="You have reviewed all entries!")
+            embed_msg = await message.channel.fetch_message(data["players"][author]["reviewMsg"])
+            await embed_msg.edit(embed=embed)
+
+        with open("database.json", "w") as filee:
+            json.dump(data, filee, indent=4)
 
 
     await bot.process_commands(message)
@@ -118,7 +192,7 @@ async def end(ctx):
         channel = await ctx.channel.category.create_text_channel("submissions")
         await channel.send(f"{bot.get_guild(1487902534545703072).get_role(1487952220208107742).mention}")
         embed = discord.Embed(colour=Colour.blue(), title="The Submission Phase Has Started!")
-        embed.add_field(name="", value="```\nPlease send in the YouTube link of the song you want to submit!\nYou can only submit one song and cannot change it afterwards\nSo choose carefully!\n```", inline=True)
+        embed.add_field(name="", value="```\nPlease send the song you wanna submit in the following style:\n[Artist] - [Titel] - [YouTube link]\nYou can only submit one song and cannot change it afterwards\nSo choose carefully!\n```", inline=True)
         embed.add_field(name="Submissions", value=f"**```ml\n0/{data["players"]["playerNum"]}\n```**", inline=False)
         message = await channel.send(embed=embed)
 
