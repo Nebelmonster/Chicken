@@ -3,18 +3,48 @@
         "round": 2,
         "join": false,
         "sub": false,
-        "review": false
+        "review": true
     },
     "ids": {
-        "subChannel": 1488367769056575569,
-        "subMsg": 1488367771292139570
+        "subChannel": 1489062176219074650,
+        "subMsg": 1489062178358165646
     },
     "players": {
-        "playerNum": 3,
-        "subNum": 3
+        "playerNum": 2,
+        "subNum": 2,
+        "294941635505029141": {
+            "sub": {
+                "artist": "fghfgh",
+                "titel": "dfgd",
+                "link": "https://dfsdhg.com"
+            },
+            "reviewIndex": 1,
+            "reviewChannel": 1489062269961764985,
+            "reviewsDone": 0,
+            "reviewMsg": 1489062274906722327
+        },
+        "1488360653843337396": {
+            "sub": {
+                "artist": "jahdjd",
+                "titel": "sheje",
+                "link": "https://jdhd.com"
+            },
+            "reviewIndex": 0,
+            "reviewChannel": 1489062271287164969,
+            "reviewsDone": 0,
+            "reviewMsg": 1489062276504879216
+        }
     },
     "order": [
+        "294941635505029141",
+        "1488360653843337396"
     ],
     "reviews": {
+        "294941635505029141": {
+            "1488360653843337396": {}
+        },
+        "1488360653843337396": {
+            "294941635505029141": {}
+        }
     }
 }
