@@ -142,9 +142,58 @@ async def on_message(message):
         if data["players"][author]["reviewsDone"] != data["players"]["playerNum"] - 1:
             await update_review_embed(author)
         else:
-            embed = discord.Embed(colour=Colour.blue(), title="Rating Phase!", description="You have reviewed all entries!")
+            data["gameloop"]["review"] = False
+            data["gameloop"]["rating"] = True
+
+            class rateB(discord.ui.View):
+                def __init__(self, data):
+                    super().__init__()
+                    self.data = data
+
+                    for i, x in enumerate(data["order"]):
+                        if i == 0:
+                            continue
+
+                        button = discord.ui.Button(
+                            label=str(i),
+                            style=discord.ButtonStyle.green,
+                            custom_id=f"rate_button_{i}"
+                        )
+                        button.callback = self.create_callback(i)
+                        self.add_item(button)
+
+                def create_callback(self, label_value):
+                    async def callback(interaction: discord.Interaction):
+                        user_id = str(interaction.user.id)
+                        if user_id not in self.data["ratings"]:
+                            self.data["ratings"][user_id] = []
+
+                        mem = ""
+                        index = 0
+                        for y in self.data["order"]:
+                            if y == user_id:
+                                continue
+                            if index == int(label_value) - 1:
+                                mem = y
+                            index += 1
+
+                        self.data["ratings"][user_id].append(mem)
+
+                        with open("database.json", "w") as filee:
+                            json.dump(self.data, filee, indent=4)
+
+                        await interaction.response.send_message(f"Rating saved!", delete_after=3)
+                    return callback
+
+            embed = discord.Embed(colour=Colour.blue(), title="Rating Phase!", description="You have reviewed all entries!\nBelow is a list of all entries again!")
+            i = 1
+            for x in data["order"]:
+                if x == author:
+                    continue
+                embed.add_field(name=f"{i}. {data["players"][x]["sub"]["artist"]} - {data["players"][x]["sub"]["titel"]}", value = f"```\n{data["players"][x]["sub"]["link"]}\n```", inline=False)
+                i += 1
             embed_msg = await message.channel.fetch_message(data["players"][author]["reviewMsg"])
-            await embed_msg.edit(embed=embed)
+            await embed_msg.edit(embed=embed, view=rateB(data))
 
         with open("database.json", "w") as filee:
             json.dump(data, filee, indent=4)
@@ -217,10 +266,12 @@ async def reset(ctx):
         await ctx.send("https://tenor.com/view/sarahmcfadyen-atc-against-the-current-chrissy-costanza-middle-finger-gif-26482117", delete_after=5)
         return
     data["reviews"] = {}
+    data["ratings"] = {}
     data["order"] = []
     data["gameloop"]["join"] = False
     data["gameloop"]["sub"] = False
     data["gameloop"]["review"] = False
+    data["gameloop"]["rating"] = False
     data["ids"]["subChannel"] = -1
     data["ids"]["subMsg"] = -1
     data["players"] = {}
