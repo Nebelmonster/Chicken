@@ -50,7 +50,8 @@ with open("database.json", "r") as file:
 @bot.event
 async def on_ready():
     print(f"We are ready to go in, {bot.user.name}")
-    bot.get_guild(1487902534545703072).get_channel(1487902536147931271).fetch_message(1490125327102513233).reply("INTERUPTION TIME")
+    message = await bot.get_guild(1487902534545703072).get_channel(1487902536147931271).fetch_message(1490125327102513233)
+    await message.reply("INTERUPTION TIME")
 
 @bot.event
 async def on_message(message):
