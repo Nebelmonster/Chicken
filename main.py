@@ -236,6 +236,7 @@ async def start(ctx):
 @bot.command()
 async def end(ctx):
     if ctx.author.id != 294941635505029141:
+        await ctx.message.delete()
         await ctx.send("https://tenor.com/view/sarahmcfadyen-atc-against-the-current-chrissy-costanza-middle-finger-gif-26482117", delete_after=5)
         return
     if not data["gameloop"]["join"]:
