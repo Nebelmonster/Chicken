@@ -209,6 +209,8 @@ class Join(discord.ui.View):
             data["players"]["playerNum"] += 1
             with open("database.json", "w") as filee:
                 json.dump(data, filee, indent=4)
+            role = interaction.guild.get_role(1487952220208107742)
+            await interaction.user.add_roles(role, reason="Joined the game")
             await interaction.response.send_message(f"<@{interaction.user.id}> you are in!", delete_after=3)
         else:
             await interaction.response.send_message(f"<@{interaction.user.id}> you already joined!", delete_after=3)
