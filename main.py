@@ -164,10 +164,10 @@ async def on_message(message):
                             style=discord.ButtonStyle.green,
                             custom_id=f"rate_button_{i}"
                         )
-                        button.callback = self.create_callback(i)
+                        button.callback = self.create_callback(i, button)
                         self.add_item(button)
 
-                def create_callback(self, label_value):
+                def create_callback(self, label_value, button):
                     async def callback(interaction: discord.Interaction):
                         user_id = str(interaction.user.id)
                         if user_id not in self.data["ratings"]:
@@ -186,11 +186,13 @@ async def on_message(message):
 
                         with open("database.json", "w") as filee:
                             json.dump(self.data, filee, indent=4)
-                        await interaction.response.send_message(f"Rating saved!", delete_after=3)
+                        button.disabled = True
+                        await interaction.response.edit_message(view=self)
+                        await interaction.followup.send(f"Rating saved!", ephemeral=True)
                     return callback
 
-            embed = discord.Embed(colour=Colour.blue(), title="Rating Phase!", description="You have reviewed all entries!")
-            embed.add_field(name=f"```\nBelow there is a list of all entries numbered from 1 - {data["players"]["playerNum"]-1}\nClick the buttons corresponding to the entry in the order from best to worst!\nSo if you like entry 2 the most, click button 2 first.\n```")
+            embed = discord.Embed(colour=Colour.blue(), title="Rating Phase!")
+            embed.add_field(name="You have reviewed all entries!", value=f"```\nBelow there is a list of all entries numbered from 1 - {data["players"]["playerNum"]-1}\nClick the buttons corresponding to the entry in the order from best to worst!\nSo if you like entry 2 the most, click button 2 first.\n```")
             i = 1
             for x in data["order"]:
                 if x == author:
