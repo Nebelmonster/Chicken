@@ -55,7 +55,7 @@ async def on_ready():
 async def on_message(message):
     if message.author == bot.user:
         return
-    if "chicken" in message.content.lower():
+    if "chicken" in message.content.lower() or "🐔" in message.content.lower():
         await message.add_reaction("🐔")
 
     #Submission Phase
@@ -144,6 +144,9 @@ async def on_message(message):
         if data["players"][author]["reviewsDone"] != data["players"]["playerNum"] - 1:
             await update_review_embed(author)
         else:
+
+            #Rating Phase
+
             data["gameloop"]["review"] = False
             data["gameloop"]["rating"] = True
 
@@ -161,10 +164,10 @@ async def on_message(message):
                             style=discord.ButtonStyle.green,
                             custom_id=f"rate_button_{i}"
                         )
-                        button.callback = self.create_callback(i)
+                        button.callback = self.create_callback(i, button)
                         self.add_item(button)
 
-                def create_callback(self, label_value):
+                def create_callback(self, label_value, button):
                     async def callback(interaction: discord.Interaction):
                         user_id = str(interaction.user.id)
                         if user_id not in self.data["ratings"]:
@@ -183,11 +186,12 @@ async def on_message(message):
 
                         with open("database.json", "w") as filee:
                             json.dump(self.data, filee, indent=4)
-
+                        button.disabled = True
                         await interaction.response.send_message(f"Rating saved!", delete_after=3)
                     return callback
 
-            embed = discord.Embed(colour=Colour.blue(), title="Rating Phase!", description="You have reviewed all entries!\nBelow is a list of all entries again!")
+            embed = discord.Embed(colour=Colour.blue(), title="Rating Phase!", description="You have reviewed all entries!")
+            embed.add_field(name=f"```\nBelow there is a list of all entries numbered from 1 - {data["players"]["playerNum"]-1}\nClick the buttons corresponding to the entry in the order from best to worst!\nSo if you like entry 2 the most, click button 2 first.\n```")
             i = 1
             for x in data["order"]:
                 if x == author:
