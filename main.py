@@ -164,10 +164,10 @@ async def on_message(message):
                             style=discord.ButtonStyle.green,
                             custom_id=f"rate_button_{i}"
                         )
-                        button.callback = self.create_callback(i, button)
+                        button.callback = self.create_callback(i)
                         self.add_item(button)
 
-                def create_callback(self, label_value, button):
+                def create_callback(self, label_value):
                     async def callback(interaction: discord.Interaction):
                         user_id = str(interaction.user.id)
                         if user_id not in self.data["ratings"]:
@@ -186,7 +186,6 @@ async def on_message(message):
 
                         with open("database.json", "w") as filee:
                             json.dump(self.data, filee, indent=4)
-                        button.disabled = True
                         await interaction.response.send_message(f"Rating saved!", delete_after=3)
                     return callback
 
