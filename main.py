@@ -192,7 +192,7 @@ async def on_message(message):
                     return callback
 
             embed = discord.Embed(colour=Colour.blue(), title="Rating Phase!")
-            embed.add_field(name="You have reviewed all entries!", value=f"```\nBelow  there is a list of all entries numbered from 1 - {data["players"]["playerNum"]-1}\nClick the buttons corresponding to the entry in the order from best to worst!\nSo if you like entry 2 the most, click button 2 first.\n```")
+            embed.add_field(name="You have reviewed all entries!", value=f"```\nBelow there is a list of all entries numbered from 1 - {data["players"]["playerNum"]-1}\nClick the buttons corresponding to the entry in the order from best to worst!\nSo if you like entry 2 the most, click button 2 first.\n```")
             i = 1
             for x in data["order"]:
                 if x == author:
