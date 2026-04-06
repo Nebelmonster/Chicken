@@ -57,6 +57,9 @@ async def on_message(message):
         return
     if "chicken" in message.content.lower() or "🐔" in message.content.lower():
         await message.add_reaction("🐔")
+        data["chickenCnt"] +=1
+        with open("database.json", "w") as filee:
+            json.dump(data, filee, indent=4)
 
     #Submission Phase
 
