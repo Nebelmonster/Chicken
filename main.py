@@ -1,15 +1,21 @@
 import asyncio
 import json
 import random
+import math
 
 import discord
 from discord import Colour
 from discord.ext import commands
+from discord import app_commands
 import logging
 from dotenv import load_dotenv
 import os
 
 lock = asyncio.Lock()
+
+def get_level(user_id):
+    xp = data["counters"][str(user_id)]["msgs"]["xp"]
+    return math.sqrt(0.2 * xp + 5) - 5
 
 async def update_review_embed(x):
     channel = bot.get_channel(data["players"][x]["reviewChannel"])
@@ -45,11 +51,14 @@ intents.members = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
+tree = app_commands.CommandTree(bot)
+
 with open("database.json", "r") as file:
     data = json.load(file)
 
 @bot.event
 async def on_ready():
+    await tree.sync(guild=discord.Object(id=1487902534545703072))
     print(f"We are ready to go in, {bot.user.name}")
 
 @bot.event
@@ -309,6 +318,14 @@ async def reset(ctx):
     await ctx.channel.send(f"Data reset successfully!")
     await asyncio.sleep(3)
     await ctx.channel.purge(limit=2)
+
+@tree.command(
+    name="level",
+    description="Shows your level",
+    guild=discord.Object(id=1487902534545703072)
+)
+async def level_command(interaction):
+    await interaction.response.send_message(f"You are level {get_level(interaction.user.id)}.")
 
 
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)
