@@ -1,5 +1,4 @@
 {
-    "chickenCnt": 0,
     "gameloop": {
         "round": 2,
         "join": false,
@@ -17,5 +16,6 @@
     },
     "order": [],
     "reviews": {},
-    "ratings": {}
+    "ratings": {},
+    "counters": {}
 }

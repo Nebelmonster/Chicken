@@ -1,5 +1,6 @@
 import asyncio
 import json
+import random
 
 import discord
 from discord import Colour
@@ -55,9 +56,17 @@ async def on_ready():
 async def on_message(message):
     if message.author == bot.user:
         return
+    if not str(message.author.id) in data["counters"]:
+        data["counters"][str(message.author.id)] = {}
+        data["counters"][str(message.author.id)]["chicken"] = 0
+        data["counters"][str(message.author.id)]["msgs"] = {}
+        data["counters"][str(message.author.id)]["msgs"]["count"] =0
+        data["counters"][str(message.author.id)]["msgs"]["xp"] = 0
+    data["counters"][str(message.author.id)]["msgs"]["count"] += 1
+    data["counters"][str(message.author.id)]["msgs"]["xp"] += random.randint(5,10)
     if "chicken" in message.content.lower() or "🐔" in message.content.lower():
         await message.add_reaction("🐔")
-        data["chickenCnt"] +=1
+        data["counters"][str(message.author.id)]["chicken"] += 1
         with open("database.json", "w") as filee:
             json.dump(data, filee, indent=4)
 
