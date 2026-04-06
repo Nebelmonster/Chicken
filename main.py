@@ -27,7 +27,7 @@ async def update_review_embed(x):
                     inline=True)
     embed.add_field(name="Link", value=f"```{data["players"][submitter]["sub"]["link"]}```", inline=False)
     embed.add_field(name="Instructions",
-                    value=f"```Please send your  thoughts and feelings about the song in a single message below.\nThis will be used as your review text later!```",
+                    value=f"```Please send your thoughts and feelings about the song in a single message below.\nThis will be used as your review text later!```",
                     inline=False)
     if bot.get_user(int(submitter)).avatar is not None:
         embed.set_thumbnail(url=bot.get_user(int(submitter)).avatar.url)
