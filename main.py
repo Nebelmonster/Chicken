@@ -6,7 +6,6 @@ import math
 import discord
 from discord import Colour
 from discord.ext import commands
-from discord import app_commands
 import logging
 from dotenv import load_dotenv
 import os
@@ -15,7 +14,12 @@ lock = asyncio.Lock()
 
 def get_level(user_id):
     xp = data["counters"][str(user_id)]["msgs"]["xp"]
-    return math.sqrt(0.2 * xp + 5) - 5
+    return int(math.sqrt(xp / 100) + 1)
+
+def get_next_level_thresh(user_id):
+    next_level = get_level(user_id) + 1
+    next_level_threshold = 100 * math.pow(next_level - 1, 2)
+    return int(next_level_threshold)
 
 async def update_review_embed(x):
     channel = bot.get_channel(data["players"][x]["reviewChannel"])
@@ -51,7 +55,7 @@ intents.members = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-tree = app_commands.CommandTree(bot)
+tree = bot.tree
 
 with open("database.json", "r") as file:
     data = json.load(file)
@@ -69,15 +73,15 @@ async def on_message(message):
         data["counters"][str(message.author.id)] = {}
         data["counters"][str(message.author.id)]["chicken"] = 0
         data["counters"][str(message.author.id)]["msgs"] = {}
-        data["counters"][str(message.author.id)]["msgs"]["count"] =0
-        data["counters"][str(message.author.id)]["msgs"]["xp"] = 0
+        data["counters"][str(message.author.id)]["msgs"]["count"] = 0
+        data["counters"][str(message.author.id)]["msgs"]["xp"] = 100
     data["counters"][str(message.author.id)]["msgs"]["count"] += 1
     data["counters"][str(message.author.id)]["msgs"]["xp"] += random.randint(5,10)
     if "chicken" in message.content.lower() or "🐔" in message.content.lower():
         await message.add_reaction("🐔")
         data["counters"][str(message.author.id)]["chicken"] += 1
-        with open("database.json", "w") as filee:
-            json.dump(data, filee, indent=4)
+    with open("database.json", "w") as filee:
+        json.dump(data, filee, indent=4)
 
     #Submission Phase
 
@@ -325,7 +329,12 @@ async def reset(ctx):
     guild=discord.Object(id=1487902534545703072)
 )
 async def level_command(interaction):
-    await interaction.response.send_message(f"You are level {get_level(interaction.user.id)}.")
+    id = interaction.user.id
+    xp = data["counters"][str(id)]["msgs"]["xp"]
+    embed = discord.Embed(colour=Colour.green())
+    embed.add_field(name="Level", value=f"```yaml\n{get_level(interaction.user.id)}\n```", inline=False)
+    embed.add_field(name="XP", value=f"```yaml\n{xp}/{get_next_level_thresh(id)}\n```", inline=False)
+    await interaction.response.send_message(embed=embed)
 
 
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)
