@@ -334,8 +334,8 @@ async def reset(ctx):
     description="Shows your level",
     guild=discord.Object(id=1487902534545703072)
 )
-async def level_command(interaction):
-    id = interaction.user.id
+async def level_command(interaction, user: discord.User = None):
+    id = user.id or interaction.user.id
     xp = data["counters"][str(id)]["msgs"]["xp"]
     embed = discord.Embed(colour=Colour.green())
     embed.add_field(name="Level", value=f"```yaml\n{get_level(interaction.user.id)}\n```", inline=False)
@@ -344,12 +344,13 @@ async def level_command(interaction):
 
 @tree.command(
     name="say",
-    description="Lets the bot say somethinh",
+    description="Lets the bot say something",
     guild=discord.Object(id=1487902534545703072),
 )
 @app_commands.default_permissions(administrator=True)
 async def say_command(interaction: discord.Interaction, msg: str):
+    await interaction.response.defer(ephemeral=True)
     await interaction.channel.send(msg)
-    await interaction.response.defer(ephemeral=True, thinking=False)
+    await interaction.delete_original_response()
 
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)
