@@ -88,7 +88,7 @@ async def on_message(message):
     if (not "lastMsg" in data["counters"][str(message.author.id)]["msgs"]) or (time.time() - data["counters"][str(message.author.id)]["msgs"]["lastMsg"] > 10):
         rndm = random.randint(3,7)
         if data["counters"][str(message.author.id)]["msgs"]["xp"] + rndm >= get_next_level_thresh(message.author.id):
-            await message.reply(f"```\nYou reached level {get_level(message.author.id) + 1}!\n```")
+            await message.reply(f"`\nYou reached level {get_level(message.author.id) + 1}!\n`")
         data["counters"][str(message.author.id)]["msgs"]["xp"] += rndm
         data["counters"][str(message.author.id)]["msgs"]["lastMsg"] = time.time()
     if "chicken" in message.content.lower() or "🐔" in message.content.lower():
