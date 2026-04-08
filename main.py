@@ -79,7 +79,7 @@ async def on_message(message):
         data["counters"][str(message.author.id)]["msgs"]["count"] = 0
         data["counters"][str(message.author.id)]["msgs"]["xp"] = 0
     data["counters"][str(message.author.id)]["msgs"]["count"] += 1
-    if (not "lastMsg" in data["counters"][str(message.author.id)]["msgs"]) or (time.time() - data["counters"][str(message.author.id)]["msgs"]["lastMsg"] > 20):
+    if (not "lastMsg" in data["counters"][str(message.author.id)]["msgs"]) or (time.time() - data["counters"][str(message.author.id)]["msgs"]["lastMsg"] > 10):
         data["counters"][str(message.author.id)]["msgs"]["xp"] += random.randint(3,7)
         data["counters"][str(message.author.id)]["msgs"]["lastMsg"] = time.time()
     if "chicken" in message.content.lower() or "🐔" in message.content.lower():
