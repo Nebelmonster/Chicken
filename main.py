@@ -339,6 +339,8 @@ async def reset(ctx):
 )
 async def level_command(interaction, user: discord.User = None):
     member = user or interaction.user
+    if member is bot.user:
+        return
     id = member.id
     xp = data["counters"][str(id)]["msgs"]["xp"]
     embed = discord.Embed(colour=Colour.green(), title=f"{member.global_name}'s stats:")
