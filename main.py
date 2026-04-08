@@ -16,11 +16,11 @@ lock = asyncio.Lock()
 
 def get_level(user_id):
     xp = data["counters"][str(user_id)]["msgs"]["xp"]
-    return int(math.sqrt(xp / 100) + 1)
+    return int(math.sqrt(xp / 160) + 1)
 
 def get_next_level_thresh(user_id):
     next_level = get_level(user_id) + 1
-    next_level_threshold = 100 * math.pow(next_level - 1, 2)
+    next_level_threshold = 160 * math.pow(next_level - 1, 2)
     return int(next_level_threshold)
 
 async def update_review_embed(x):
