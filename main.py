@@ -340,6 +340,7 @@ async def reset(ctx):
 async def level_command(interaction, user: discord.User = None):
     member = user or interaction.user
     if member is bot.user:
+        await interaction.response.send_message("Can't use this command on me 😉", ephemeral=True)
         return
     id = member.id
     xp = data["counters"][str(id)]["msgs"]["xp"]
