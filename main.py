@@ -342,9 +342,12 @@ async def level_command(interaction, user: discord.User = None):
     id = member.id
     xp = data["counters"][str(id)]["msgs"]["xp"]
     embed = discord.Embed(colour=Colour.green(), title=f"{member.global_name}'s stats:")
-    embed.add_field(name="Level", value=f"```yaml\n{get_level(id)}\n```", inline=False)
-    embed.add_field(name="XP", value=f"```yaml\n{xp}/{get_next_level_thresh(id)}\n```", inline=False)
-    embed.add_field(name="🐔", value=f"```yaml\n{data["counters"][str(id)]["chicken"]}\n```", inline=False)
+    if str(id) in data["counters"]:
+        embed.add_field(name="Level", value=f"```yaml\n{get_level(id)}\n```", inline=False)
+        embed.add_field(name="XP", value=f"```yaml\n{xp}/{get_next_level_thresh(id)}\n```", inline=False)
+        embed.add_field(name="🐔", value=f"```yaml\n{data["counters"][str(id)]["chicken"]}\n```", inline=False)
+    else:
+        embed.add_field(name="", value="```\nThis player has not sent a message in this server yet\n```")
     if member.avatar is not None:
         embed.set_thumbnail(url=member.avatar.url)
     await interaction.response.send_message(embed=embed)
