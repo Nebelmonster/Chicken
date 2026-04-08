@@ -69,6 +69,8 @@ async def on_ready():
 async def on_message(message):
     if message.author == bot.user:
         return
+    if not message.guild is None:
+        return
     if not str(message.author.id) in data["counters"]:
         data["counters"][str(message.author.id)] = {}
         data["counters"][str(message.author.id)]["chicken"] = 0
