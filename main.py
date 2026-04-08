@@ -78,7 +78,7 @@ async def on_message(message):
         data["counters"][str(message.author.id)]["msgs"]["count"] = 0
         data["counters"][str(message.author.id)]["msgs"]["xp"] = 0
     data["counters"][str(message.author.id)]["msgs"]["count"] += 1
-    data["counters"][str(message.author.id)]["msgs"]["xp"] += random.randint(5,10)
+    data["counters"][str(message.author.id)]["msgs"]["xp"] += random.randint(3,7)
     if "chicken" in message.content.lower() or "🐔" in message.content.lower():
         await message.add_reaction("🐔")
         data["counters"][str(message.author.id)]["chicken"] += 1
