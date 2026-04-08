@@ -73,6 +73,9 @@ async def on_message(message):
         return
     if message.guild is None:
         return
+    if time.time() - data["lastBackup"] > 3600:
+        with open("database_backup.json", "w") as filee:
+            json.dump(data, filee, indent=4)
     if not str(message.author.id) in data["counters"]:
         data["counters"][str(message.author.id)] = {}
         data["counters"][str(message.author.id)]["chicken"] = 0
