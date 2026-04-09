@@ -23,9 +23,14 @@ def get_next_level_thresh(user_id):
     next_level_threshold = 160 * math.pow(next_level - 1, 2)
     return int(next_level_threshold)
 
-def get_leaderboard(num: int):
+def get_xp_leaderboard(num: int):
     counters = data["counters"]
     sorted_leaderboard = sorted(counters.items(), key=lambda x: (x[1]["msgs"]["xp"], x[1]["msgs"]["count"]), reverse=True)
+    return sorted_leaderboard[:num]
+
+def get_chicken_leaderboard(num: int):
+    counters = data["counters"]
+    sorted_leaderboard = sorted(counters.items(), key=lambda x: x[1]["chicken"], reverse=True)
     return sorted_leaderboard[:num]
 
 async def update_review_embed(x):
@@ -372,14 +377,25 @@ async def level_command(interaction, user: discord.User = None):
     description="Shows the XP leaderboard",
     guild=discord.Object(id=1487902534545703072)
 )
-async def leaderboard_command(interaction):
-    leaderboard = get_leaderboard(5)
-    embed = discord.Embed(colour=Colour.purple(), title="XP Leaderboard")
-    for rank, (user_id, stats) in enumerate(leaderboard, start=1):
-        xp = stats["msgs"]["xp"]
-        level = get_level(user_id)
-        user_name = bot.get_user(int(user_id)).global_name
-        embed.add_field(name=f"{rank}. {user_name}", value=f"```ml\nLevel: {level} | XP: {xp}\n```", inline=False)
+async def leaderboard_command(interaction, type: str = "xp"):
+    if not (type.lower() == "xp" or type.lower() == "chicken"):
+        await interaction.response.send_message('Only "xp" and "chicken" are valid leaderboard types', ephemeral=True)
+        return
+    if type.lower() == "xp":
+        leaderboard = get_xp_leaderboard(5)
+        embed = discord.Embed(colour=Colour.purple(), title="XP Leaderboard")
+        for rank, (user_id, stats) in enumerate(leaderboard, start=1):
+            xp = stats["msgs"]["xp"]
+            level = get_level(user_id)
+            user_name = bot.get_user(int(user_id)).global_name
+            embed.add_field(name=f"{rank}. {user_name}", value=f"```\nLevel: {level} | XP: {xp}\n```", inline=False)
+    else:
+        leaderboard = get_chicken_leaderboard(5)
+        embed = discord.Embed(colour=Colour.purple(), title="Chicken Leaderboard")
+        for rank, (user_id, stats) in enumerate(leaderboard, start=1):
+            chicken = stats["chicken"]
+            user_name = bot.get_user(int(user_id)).global_name
+            embed.add_field(name=f"{rank}. {user_name}", value=f"```\n🐔: {chicken}\n```", inline=False)
     await interaction.response.send_message(embed=embed)
 
 @tree.command(
