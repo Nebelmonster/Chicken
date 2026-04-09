@@ -23,6 +23,11 @@ def get_next_level_thresh(user_id):
     next_level_threshold = 160 * math.pow(next_level - 1, 2)
     return int(next_level_threshold)
 
+def get_leaderboard(num: int):
+    counters = data["counters"]
+    sorted_leaderboard = sorted(counters.items(), key=lambda x: (x[1]["msgs"]["xp"], x[1]["msgs"]["count"]), reverse=True)
+    return sorted_leaderboard[:num]
+
 async def update_review_embed(x):
     channel = bot.get_channel(data["players"][x]["reviewChannel"])
     review_index = data["players"][x]["reviewIndex"]
@@ -85,7 +90,7 @@ async def on_message(message):
         data["counters"][str(message.author.id)]["msgs"]["count"] = 0
         data["counters"][str(message.author.id)]["msgs"]["xp"] = 0
     data["counters"][str(message.author.id)]["msgs"]["count"] += 1
-    if (not "lastMsg" in data["counters"][str(message.author.id)]["msgs"]) or (time.time() - data["counters"][str(message.author.id)]["msgs"]["lastMsg"] > 10):
+    if (not "lastMsg" in data["counters"][str(message.author.id)]["msgs"]) or (time.time() - data["counters"][str(message.author.id)]["msgs"]["lastMsg"] > 15):
         rndm = random.randint(3,7)
         if data["counters"][str(message.author.id)]["msgs"]["xp"] + rndm >= get_next_level_thresh(message.author.id):
             embed = discord.Embed(colour=Colour.red())
@@ -363,9 +368,24 @@ async def level_command(interaction, user: discord.User = None):
     await interaction.response.send_message(embed=embed)
 
 @tree.command(
+    name="leaderboard",
+    description="Shows the XP leaderboard",
+    guild=discord.Object(id=1487902534545703072)
+)
+async def leaderboard_command(interaction):
+    leaderboard = get_leaderboard(5)
+    embed = discord.Embed(colour=Colour.purple(), title="XP Leaderboard")
+    for rank, (user_id, stats) in enumerate(leaderboard, start=1):
+        xp = stats["msgs"]["xp"]
+        level = get_level(user_id)
+        user_name = bot.get_user(int(user_id)).global_name
+        embed.add_field(name=f"{rank}. {user_name}", value=f"```\nLevel: {level} | XP: {xp}\n```")
+    await interaction.response.send_message(embed=embed)
+
+@tree.command(
     name="say",
     description="Lets the bot say something",
-    guild=discord.Object(id=1487902534545703072),
+    guild=discord.Object(id=1487902534545703072)
 )
 @app_commands.default_permissions(administrator=True)
 async def say_command(interaction: discord.Interaction, msg: str):
