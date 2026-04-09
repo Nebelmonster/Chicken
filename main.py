@@ -377,11 +377,12 @@ async def level_command(interaction, user: discord.User = None):
     description="Shows the XP leaderboard",
     guild=discord.Object(id=1487902534545703072)
 )
-async def leaderboard_command(interaction, type: str = "xp"):
-    if not (type.lower() == "xp" or type.lower() == "chicken"):
-        await interaction.response.send_message('Only "xp" and "chicken" are valid leaderboard types', ephemeral=True)
-        return
-    if type.lower() == "xp":
+@app_commands.choices(typ=[
+    app_commands.Choice(name="XP", value="xp"),
+    app_commands.Choice(name="Chicken", value="chicken")
+])
+async def leaderboard_command(interaction, lb_type: app_commands.Choice[str]):
+    if lb_type.value == "xp":
         leaderboard = get_xp_leaderboard(5)
         embed = discord.Embed(colour=Colour.purple(), title="XP Leaderboard")
         for rank, (user_id, stats) in enumerate(leaderboard, start=1):
