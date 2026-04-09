@@ -377,11 +377,12 @@ async def level_command(interaction, user: discord.User = None):
     description="Shows the XP leaderboard",
     guild=discord.Object(id=1487902534545703072)
 )
-@app_commands.choices(typ=[
+@app_commands.choices(lb_type=[
     app_commands.Choice(name="XP", value="xp"),
     app_commands.Choice(name="Chicken", value="chicken")
 ])
 async def leaderboard_command(interaction, lb_type: app_commands.Choice[str]):
+    await interaction.response.defer()
     if lb_type.value == "xp":
         leaderboard = get_xp_leaderboard(5)
         embed = discord.Embed(colour=Colour.purple(), title="XP Leaderboard")
@@ -395,9 +396,9 @@ async def leaderboard_command(interaction, lb_type: app_commands.Choice[str]):
         embed = discord.Embed(colour=Colour.purple(), title="Chicken Leaderboard")
         for rank, (user_id, stats) in enumerate(leaderboard, start=1):
             chicken = stats["chicken"]
-            user_name = bot.get_user(int(user_id)).global_name
+            user_name = bot.fetch_user(int(user_id)).global_name
             embed.add_field(name=f"{rank}. {user_name}", value=f"```\n🐔: {chicken}\n```", inline=False)
-    await interaction.response.send_message(embed=embed)
+    await interaction.followup.send(embed=embed)
 
 @tree.command(
     name="say",
