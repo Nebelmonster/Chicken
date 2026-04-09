@@ -1,6 +1,9 @@
 import asyncio
 import json
 
+from events.counterSystem import get_level
+from events.counterSystem import get_next_level_thresh
+
 import discord
 from discord import Colour
 from discord import app_commands
