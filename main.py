@@ -396,7 +396,7 @@ async def leaderboard_command(interaction, lb_type: app_commands.Choice[str]):
         embed = discord.Embed(colour=Colour.purple(), title="Chicken Leaderboard")
         for rank, (user_id, stats) in enumerate(leaderboard, start=1):
             chicken = stats["chicken"]
-            user_name = bot.fetch_user(int(user_id)).global_name
+            user_name = bot.get_user(int(user_id)).global_name
             embed.add_field(name=f"{rank}. {user_name}", value=f"```\n🐔: {chicken}\n```", inline=False)
     await interaction.followup.send(embed=embed)
 
