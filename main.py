@@ -379,7 +379,7 @@ async def leaderboard_command(interaction):
         xp = stats["msgs"]["xp"]
         level = get_level(user_id)
         user_name = bot.get_user(int(user_id)).global_name
-        embed.add_field(name=f"{rank}. {user_name}", value=f"```\nLevel: {level} | XP: {xp}\n```")
+        embed.add_field(name=f"{rank}. {user_name}", value=f"```\nLevel: {level} | XP: {xp}\n```", inline=False)
     await interaction.response.send_message(embed=embed)
 
 @tree.command(
