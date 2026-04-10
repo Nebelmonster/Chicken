@@ -34,6 +34,7 @@ async def my_setup():
     await bot.load_extension("commands.resetCommand")
     await bot.load_extension("commands.sayCommand")
     await bot.load_extension("commands.startCommand")
+    bot.tree.clear_commands(guild=None)
     await tree.sync(guild=discord.Object(id=1487902534545703072))
     print("Ready")
 
