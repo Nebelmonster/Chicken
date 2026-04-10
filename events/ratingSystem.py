@@ -17,8 +17,9 @@ class RatingSystem(commands.Cog):
             return
         data = self.bot.data
         if message.channel.category_id == 1487953481422602340 and message.channel.id != 1487958792527413418 and message.channel.id != int(data["ids"]["subChannel"]):
-            print("test2")
             author = str(message.author.id)
+            print(f"\nreviewsDone: {data["players"][author]["reviewsDone"]}")
+            print(f"\nplayerNum-1: {data["players"]["playerNum"] - 1}")
             if data["players"][author]["reviewsDone"] == data["players"]["playerNum"] - 1:
                 print("test")
 
