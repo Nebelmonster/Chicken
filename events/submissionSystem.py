@@ -87,7 +87,7 @@ class SubmissionSystem(commands.Cog):
                             data["players"][x]["reviewIndex"] += 1
                             submitter = data["order"][review_index + 1]
                         embed = discord.Embed(colour=Colour.blue(),
-                                              title=f"Review Phase! (Song {data["players"][x]["reviewsDone"]}/{data["players"]["playerNum"] - 1})",
+                                              title=f"Review Phase! (Song {data["players"][x]["reviewsDone"] + 1}/{data["players"]["playerNum"] - 1})",
                                               url=data["players"][submitter]["sub"]["link"])
                         embed.add_field(name="Submitter", value=f"```{self.bot.get_user(int(submitter)).global_name}```",
                                         inline=True)

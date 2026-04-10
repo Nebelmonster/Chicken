@@ -16,7 +16,8 @@ class RatingSystem(commands.Cog):
         if message.guild is None:
             return
         data = self.bot.data
-        if message.channel.category_id == 1487953481422602340 and message.channel.id != 1487958792527413418:
+        if message.channel.category_id == 1487953481422602340 and message.channel.id != 1487958792527413418 and message.channel.id != int(data["ids"]["subChannel"]):
+            print("test2")
             author = str(message.author.id)
             if data["gameloop"]["rating"]:
                 print("test")

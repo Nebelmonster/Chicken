@@ -12,7 +12,7 @@ async def update_review_embed(x, bot, data):
         data["players"][x]["reviewIndex"] += 1
         submitter = data["order"][review_index + 1]
     embed = discord.Embed(colour=Colour.blue(),
-                          title=f"Review Phase! (Song {data["players"][x]["reviewsDone"]}/{data["players"]["playerNum"] - 1})",
+                          title=f"Review Phase! (Song {data["players"][x]["reviewsDone"] + 1}/{data["players"]["playerNum"] - 1})",
                           url=data["players"][submitter]["sub"]["link"])
     embed.add_field(name="Submitter", value=f"```{bot.get_user(int(submitter)).global_name}```", inline=True)
     embed.add_field(name="Song",
@@ -39,7 +39,7 @@ class ReviewSystem(commands.Cog):
         if message.guild is None:
             return
         data = self.bot.data
-        if message.channel.category_id == 1487953481422602340 and message.channel.id != 1487958792527413418:
+        if message.channel.category_id == 1487953481422602340 and message.channel.id != 1487958792527413418 and message.channel.id != int(data["ids"]["subChannel"]):
             author = str(message.author.id)
             submitter = data["order"][data["players"][author]["reviewIndex"]]
 
