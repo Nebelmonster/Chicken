@@ -43,9 +43,9 @@ class CounterSystem(commands.Cog):
         data["counters"][id_str]["msgs"]["count"] += 1
         if time.time() - data["counters"][id_str]["msgs"]["lastMsg"] > COOLDOWN:
             rndm = random.randint(MIN_XP, MAX_XP)
-            if data["counters"][id_str]["msgs"]["xp"] + rndm >= get_next_level_thresh(id):
+            if data["counters"][id_str]["msgs"]["xp"] + rndm >= get_next_level_thresh(id_str):
                 embed = discord.Embed(colour=Colour.red())
-                embed.add_field(name="", value=f"```\nYou reached level {get_level(id) + 1}!\n```")
+                embed.add_field(name="", value=f"```\nYou reached level {get_level(id_str) + 1}!\n```")
                 await message.reply(embed=embed)
             data["counters"][id_str]["msgs"]["xp"] += rndm
             data["counters"][id_str]["msgs"]["lastMsg"] = time.time()

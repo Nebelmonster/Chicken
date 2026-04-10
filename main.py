@@ -10,9 +10,6 @@ import logging
 from dotenv import load_dotenv
 import os
 
-with open("database.json", "r") as file:
-    data = json.load(file)
-
 def get_level(user_id):
     xp = data["counters"][str(user_id)]["msgs"]["xp"]
     return int(math.sqrt(xp / 160) + 1)
@@ -33,6 +30,9 @@ def get_chicken_leaderboard(num: int):
     counters = data["counters"]
     sorted_leaderboard = sorted(counters.items(), key=lambda x: x[1]["chicken"], reverse=True)
     return sorted_leaderboard[:num]
+
+with open("database.json", "r") as file:
+    data = json.load(file)
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
