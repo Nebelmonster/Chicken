@@ -1,5 +1,6 @@
 import asyncio
 import json
+import math
 
 import discord
 from discord import Colour
