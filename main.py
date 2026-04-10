@@ -10,29 +10,26 @@ import logging
 from dotenv import load_dotenv
 import os
 
-def get_level(user_id):
+def get_level(user_id, data):
     xp = data["counters"][str(user_id)]["msgs"]["xp"]
     return int(math.sqrt(xp / 160) + 1)
 
 
-def get_next_level_thresh(user_id):
-    next_level = get_level(user_id) + 1
+def get_next_level_thresh(user_id, data):
+    next_level = get_level(user_id, data) + 1
     next_level_threshold = 160 * math.pow(next_level - 1, 2)
     return int(next_level_threshold)
 
 
-def get_xp_leaderboard(num: int):
+def get_xp_leaderboard(num: int, data):
     counters = data["counters"]
     sorted_leaderboard = sorted(counters.items(), key=lambda x: (x[1]["msgs"]["xp"], x[1]["msgs"]["count"]), reverse=True)
     return sorted_leaderboard[:num]
 
-def get_chicken_leaderboard(num: int):
+def get_chicken_leaderboard(num: int, data):
     counters = data["counters"]
     sorted_leaderboard = sorted(counters.items(), key=lambda x: x[1]["chicken"], reverse=True)
     return sorted_leaderboard[:num]
-
-with open("database.json", "r") as file:
-    data = json.load(file)
 
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
@@ -59,6 +56,8 @@ bot.setup_hook = my_setup
 class Join(discord.ui.View):
     @discord.ui.button(label="Click to join!", style=discord.ButtonStyle.green)
     async def on_join(self, interaction, button):
+        with open("database.json", "r") as file:
+            data = json.load(file)
         if str(interaction.user.id) not in data["players"]:
             data["players"][str(interaction.user.id)] = {}
             data["players"]["playerNum"] += 1
@@ -77,6 +76,8 @@ async def purge(ctx, number: int):
 
 @bot.command()
 async def start(ctx):
+    with open("database.json", "r") as file:
+        data = json.load(file)
     await ctx.message.delete()
     if ctx.author.id != 294941635505029141:
         await ctx.send("https://tenor.com/view/sarahmcfadyen-atc-against-the-current-chrissy-costanza-middle-finger-gif-26482117", delete_after=5)
@@ -92,6 +93,8 @@ async def start(ctx):
 
 @bot.command()
 async def end(ctx):
+    with open("database.json", "r") as file:
+        data = json.load(file)
     if ctx.author.id != 294941635505029141:
         await ctx.message.delete()
         await ctx.send("https://tenor.com/view/sarahmcfadyen-atc-against-the-current-chrissy-costanza-middle-finger-gif-26482117", delete_after=5)
@@ -120,6 +123,8 @@ async def end(ctx):
 
 @bot.command()
 async def reset(ctx):
+    with open("database.json", "r") as file:
+        data = json.load(file)
     if ctx.author.id != 294941635505029141:
         await ctx.send("https://tenor.com/view/sarahmcfadyen-atc-against-the-current-chrissy-costanza-middle-finger-gif-26482117", delete_after=5)
         return
@@ -152,6 +157,8 @@ async def reset(ctx):
     guild=discord.Object(id=1487902534545703072)
 )
 async def level_command(interaction, user: discord.User = None):
+    with open("database.json", "r") as file:
+        data = json.load(file)
     member = user or interaction.user
     if member == bot.user:
         await interaction.response.send_message("Can't use this command on me 😉", ephemeral=True)
@@ -160,8 +167,8 @@ async def level_command(interaction, user: discord.User = None):
     xp = data["counters"][str(id)]["msgs"]["xp"]
     embed = discord.Embed(colour=Colour.green(), title=f"{member.global_name}'s stats:")
     if str(id) in data["counters"]:
-        embed.add_field(name="Level", value=f"```yaml\n{get_level(id)}\n```", inline=False)
-        embed.add_field(name="XP", value=f"```yaml\n{xp}/{get_next_level_thresh(id)}\n```", inline=False)
+        embed.add_field(name="Level", value=f"```yaml\n{get_level(id, data)}\n```", inline=False)
+        embed.add_field(name="XP", value=f"```yaml\n{xp}/{get_next_level_thresh(id, data)}\n```", inline=False)
         embed.add_field(name="🐔", value=f"```yaml\n{data["counters"][str(id)]["chicken"]}\n```", inline=False)
     else:
         embed.add_field(name="", value="```\nThis player has not sent a message in this server yet\n```")
@@ -181,15 +188,17 @@ async def level_command(interaction, user: discord.User = None):
 async def leaderboard_command(interaction, lb_type: app_commands.Choice[str]):
     await interaction.response.defer()
     if lb_type.value == "xp":
-        leaderboard = get_xp_leaderboard(5)
+        with open("database.json", "r") as file:
+            data = json.load(file)
+        leaderboard = get_xp_leaderboard(5, data)
         embed = discord.Embed(colour=Colour.purple(), title="XP Leaderboard")
         for rank, (user_id, stats) in enumerate(leaderboard, start=1):
             xp = stats["msgs"]["xp"]
-            level = get_level(user_id)
+            level = get_level(user_id, data)
             user_name = bot.get_user(int(user_id)).global_name
             embed.add_field(name=f"{rank}. {user_name}", value=f"```\nLevel: {level} | XP: {xp}\n```", inline=False)
     else:
-        leaderboard = get_chicken_leaderboard(5)
+        leaderboard = get_chicken_leaderboard(5, data)
         embed = discord.Embed(colour=Colour.purple(), title="Chicken Leaderboard")
         for rank, (user_id, stats) in enumerate(leaderboard, start=1):
             chicken = stats["chicken"]
