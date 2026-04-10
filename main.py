@@ -1,8 +1,6 @@
 import asyncio
 import json
 
-from events.counterSystem import get_level, get_next_level_thresh
-
 import discord
 from discord import Colour
 from discord import app_commands
@@ -10,6 +8,17 @@ from discord.ext import commands
 import logging
 from dotenv import load_dotenv
 import os
+
+def get_level(user_id):
+    xp = data["counters"][str(user_id)]["msgs"]["xp"]
+    return int(math.sqrt(xp / 160) + 1)
+
+
+def get_next_level_thresh(user_id):
+    next_level = get_level(user_id) + 1
+    next_level_threshold = 160 * math.pow(next_level - 1, 2)
+    return int(next_level_threshold)
+
 
 def get_xp_leaderboard(num: int):
     counters = data["counters"]
