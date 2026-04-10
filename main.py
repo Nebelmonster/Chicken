@@ -38,11 +38,11 @@ with open("database.json", "r") as file:
 @bot.event
 async def on_ready():
     if not hasattr(bot, "cogs_loaded"):
-        await bot.load_extension("backupSystem")
-        await bot.load_extension("counterSystem")
-        await bot.load_extension("submissionSystem")
-        await bot.load_extension("reviewSystem")
-        await bot.load_extension("ratingSystem")
+        await bot.load_extension("events.backupSystem")
+        await bot.load_extension("events.counterSystem")
+        await bot.load_extension("events.submissionSystem")
+        await bot.load_extension("events.reviewSystem")
+        await bot.load_extension("events.ratingSystem")
         bot.cogs_loaded = True
 
     await tree.sync(guild=discord.Object(id=1487902534545703072))
