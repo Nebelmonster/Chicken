@@ -20,9 +20,7 @@ class RatingSystem(commands.Cog):
         if message.channel.category_id == 1487953481422602340 and message.channel.id != 1487958792527413418:
             author = str(message.author.id)
             if data["players"][author]["reviewsDone"] == data["players"]["playerNum"] - 1:
-
-                data["gameloop"]["review"] = False
-                data["gameloop"]["rating"] = True
+                print("test")
 
                 class rateB(discord.ui.View):
                     def __init__(self, data):
