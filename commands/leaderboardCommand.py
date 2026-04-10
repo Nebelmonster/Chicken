@@ -1,7 +1,12 @@
+import math
+
 import discord
 from discord import app_commands, Colour
 from discord.ext import commands
-from events.counterSystem import get_level
+
+def get_level(user_id, data):
+    xp = data["counters"][str(user_id)]["msgs"]["xp"]
+    return int(math.sqrt(xp / 160) + 1)
 
 def get_xp_leaderboard(num: int, data):
     counters = data["counters"]
