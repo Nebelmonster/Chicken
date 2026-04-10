@@ -4,8 +4,6 @@ import discord
 from discord import Colour
 from discord.ext import commands
 
-from main import data
-
 
 class RatingSystem(commands.Cog):
     def __init__(self, bot):
@@ -17,6 +15,8 @@ class RatingSystem(commands.Cog):
             return
         if message.guild is None:
             return
+        with open("database.json", "r") as file:
+            data = json.load(file)
         if message.channel.category_id == 1487953481422602340 and message.channel.id != 1487958792527413418:
             author = str(message.author.id)
             if data["players"][author]["reviewsDone"] == data["players"]["playerNum"] - 1:

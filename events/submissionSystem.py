@@ -5,8 +5,6 @@ import discord
 from discord import Colour
 from discord.ext import commands
 
-from main import data
-
 lock = asyncio.Lock()
 
 class SubmissionSystem(commands.Cog):
@@ -19,6 +17,8 @@ class SubmissionSystem(commands.Cog):
             return
         if message.guild is None:
             return
+        with open("database.json", "r") as file:
+            data = json.load(file)
         if message.channel.id == data["ids"]["subChannel"]:
             async with lock:
                 id_str = str(message.author.id)

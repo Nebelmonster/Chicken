@@ -6,19 +6,18 @@ import time
 import discord
 from discord import Colour
 from discord.ext import commands
-from main import data
 
 MIN_XP = 3
 MAX_XP = 7
 COOLDOWN = 15
 
-def get_level(user_id):
+def get_level(user_id, data):
     xp = data["counters"][str(user_id)]["msgs"]["xp"]
     return int(math.sqrt(xp / 160) + 1)
 
 
-def get_next_level_thresh(user_id):
-    next_level = get_level(user_id) + 1
+def get_next_level_thresh(user_id,  data):
+    next_level = get_level(user_id, data) + 1
     next_level_threshold = 160 * math.pow(next_level - 1, 2)
     return int(next_level_threshold)
 
@@ -32,6 +31,8 @@ class CounterSystem(commands.Cog):
             return
         if message.guild is None:
             return
+        with open("database.json", "r") as file:
+            data = json.load(file)
         id_str = str(message.author.id)
         if not id_str in data["counters"]:
             data["counters"][id_str] = {}
@@ -43,9 +44,9 @@ class CounterSystem(commands.Cog):
         data["counters"][id_str]["msgs"]["count"] += 1
         if time.time() - data["counters"][id_str]["msgs"]["lastMsg"] > COOLDOWN:
             rndm = random.randint(MIN_XP, MAX_XP)
-            if data["counters"][id_str]["msgs"]["xp"] + rndm >= get_next_level_thresh(id_str):
+            if data["counters"][id_str]["msgs"]["xp"] + rndm >= get_next_level_thresh(id_str, data):
                 embed = discord.Embed(colour=Colour.red())
-                embed.add_field(name="", value=f"```\nYou reached level {get_level(id_str) + 1}!\n```")
+                embed.add_field(name="", value=f"```\nYou reached level {get_level(id_str, data) + 1}!\n```")
                 await message.reply(embed=embed)
             data["counters"][id_str]["msgs"]["xp"] += rndm
             data["counters"][id_str]["msgs"]["lastMsg"] = time.time()

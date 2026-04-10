@@ -1,5 +1,4 @@
 from discord.ext import commands
-from main import data
 import json
 import time
 
@@ -13,6 +12,8 @@ class BackupSystem(commands.Cog):
             return
         if message.guild is None:
             return
+        with open("database.json", "r") as file:
+            data = json.load(file)
         if time.time() - data["lastBackup"] > 3600:
             data["lastBackup"] = time.time()
             with open("database_backup.json", "w") as filee:

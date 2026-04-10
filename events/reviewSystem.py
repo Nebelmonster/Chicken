@@ -4,9 +4,7 @@ import discord
 from discord import Colour
 from discord.ext import commands
 
-from main import data
-
-async def update_review_embed(x, bot):
+async def update_review_embed(x, bot, data):
     channel = bot.get_channel(data["players"][x]["reviewChannel"])
     review_index = data["players"][x]["reviewIndex"]
     submitter = data["order"][review_index]
@@ -40,6 +38,8 @@ class ReviewSystem(commands.Cog):
             return
         if message.guild is None:
             return
+        with open("database.json", "r") as file:
+            data = json.load(file)
         if message.channel.category_id == 1487953481422602340 and message.channel.id != 1487958792527413418:
             author = str(message.author.id)
             submitter = data["order"][data["players"][author]["reviewIndex"]]
@@ -51,7 +51,7 @@ class ReviewSystem(commands.Cog):
             data["players"][author]["reviewsDone"] += 1
 
             if data["players"][author]["reviewsDone"] != data["players"]["playerNum"] - 1:
-                await update_review_embed(author, self.bot)
+                await update_review_embed(author, self.bot, data)
             with open("database.json", "w") as filee:
                 json.dump(data, filee, indent=4)
 
