@@ -45,18 +45,16 @@ intents.members = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 tree = bot.tree
 
-@bot.event
-async def on_ready():
-    if not hasattr(bot, "cogs_loaded"):
-        await bot.load_extension("events.backupSystem")
-        await bot.load_extension("events.counterSystem")
-        await bot.load_extension("events.submissionSystem")
-        await bot.load_extension("events.reviewSystem")
-        await bot.load_extension("events.ratingSystem")
-        bot.cogs_loaded = True
-
+async def my_setup():
+    await bot.load_extension("events.backupSystem")
+    await bot.load_extension("events.counterSystem")
+    await bot.load_extension("events.submissionSystem")
+    await bot.load_extension("events.reviewSystem")
+    await bot.load_extension("events.ratingSystem")
     await tree.sync(guild=discord.Object(id=1487902534545703072))
     print("Ready")
+
+bot.setup_hook = my_setup
 
 class Join(discord.ui.View):
     @discord.ui.button(label="Click to join!", style=discord.ButtonStyle.green)
@@ -210,4 +208,5 @@ async def say_command(interaction: discord.Interaction, msg: str):
     await interaction.channel.send(msg)
     await interaction.delete_original_response()
 
-bot.run(token, log_handler=handler, log_level=logging.DEBUG)
+if __name__ == "__main__":
+    bot.run(token, log_handler=handler, log_level=logging.DEBUG)
