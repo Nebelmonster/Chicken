@@ -38,8 +38,7 @@ class ReviewSystem(commands.Cog):
             return
         if message.guild is None:
             return
-        with open("database.json", "r") as file:
-            data = json.load(file)
+        data = self.bot.data
         if message.channel.category_id == 1487953481422602340 and message.channel.id != 1487958792527413418:
             author = str(message.author.id)
             submitter = data["order"][data["players"][author]["reviewIndex"]]

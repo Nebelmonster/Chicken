@@ -31,8 +31,7 @@ class CounterSystem(commands.Cog):
             return
         if message.guild is None:
             return
-        with open("database.json", "r") as file:
-            data = json.load(file)
+        data = self.bot.data
         id_str = str(message.author.id)
         if not id_str in data["counters"]:
             data["counters"][id_str] = {}

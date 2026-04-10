@@ -17,8 +17,7 @@ class SubmissionSystem(commands.Cog):
             return
         if message.guild is None:
             return
-        with open("database.json", "r") as file:
-            data = json.load(file)
+        data = self.bot.data
         if message.channel.id == data["ids"]["subChannel"]:
             async with lock:
                 id_str = str(message.author.id)
