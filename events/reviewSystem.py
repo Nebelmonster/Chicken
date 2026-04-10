@@ -51,9 +51,6 @@ class ReviewSystem(commands.Cog):
 
             if data["players"][author]["reviewsDone"] != data["players"]["playerNum"] - 1:
                 await update_review_embed(author, self.bot, data)
-            else:
-                data["gameloop"]["review"] = False
-                data["gameloop"]["rating"] = True
             with open("database.json", "w") as filee:
                 json.dump(data, filee, indent=4)
 
