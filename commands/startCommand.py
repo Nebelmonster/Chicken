@@ -42,4 +42,4 @@ class StartCommand(commands.Cog):
             await ctx.send("The joining phase is already running!", delete_after=3)
 
 async def setup(bot):
-    bot.add_cog(StartCommand(bot))
+    await bot.add_cog(StartCommand(bot))
