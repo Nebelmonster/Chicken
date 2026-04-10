@@ -84,4 +84,4 @@ class RatingSystem(commands.Cog):
                 json.dump(data, filee, indent=4)
 
 async def setup(bot):
-    bot.add_cog(RatingSystem(bot))
+    await bot.add_cog(RatingSystem(bot))
