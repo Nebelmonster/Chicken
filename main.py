@@ -10,6 +10,9 @@ import logging
 from dotenv import load_dotenv
 import os
 
+with open("database.json", "r") as file:
+    data = json.load(file)
+
 def get_level(user_id):
     xp = data["counters"][str(user_id)]["msgs"]["xp"]
     return int(math.sqrt(xp / 160) + 1)
@@ -41,9 +44,6 @@ intents.members = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 tree = bot.tree
-
-with open("database.json", "r") as file:
-    data = json.load(file)
 
 @bot.event
 async def on_ready():
