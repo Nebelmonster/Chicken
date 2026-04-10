@@ -22,6 +22,7 @@ class LeaderboardCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     @app_commands.command(name="leaderboard", description="Shows the leaderboard")
+    @app_commands.guilds(discord.Object(id=1487902534545703072))
     @app_commands.choices(lb_type=[
         app_commands.Choice(name="XP", value="xp"),
         app_commands.Choice(name="Chicken", value="chicken")

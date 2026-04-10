@@ -8,6 +8,7 @@ class SayCommand(commands.Cog):
         self.bot = bot
     @app_commands.command(name="say", description="Lets the bot say something")
     @app_commands.default_permissions(administrator=True)
+    @app_commands.guilds(discord.Object(id=1487902534545703072))
     async def say_command(self, interaction: discord.Interaction, msg: str):
         await interaction.response.defer(ephemeral=True)
         await interaction.channel.send(msg)

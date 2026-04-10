@@ -18,6 +18,7 @@ class LevelCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     @app_commands.command(name="level", description="Shows your level")
+    @app_commands.guilds(discord.Object(id=1487902534545703072))
     async def level_command(self, interaction, user: discord.User = None):
         data = self.bot.data
         member = user or interaction.user
