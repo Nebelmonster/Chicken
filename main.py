@@ -51,8 +51,7 @@ async def my_setup():
     await bot.load_extension("events.backupSystem")
     await bot.load_extension("events.counterSystem")
     await bot.load_extension("events.submissionSystem")
-    await bot.load_extension("events.reviewSystem")
-    await bot.load_extension("events.ratingSystem")
+    await bot.load_extension("events.reviewRatingSystem")
     await tree.sync(guild=discord.Object(id=1487902534545703072))
     print("Ready")
 
