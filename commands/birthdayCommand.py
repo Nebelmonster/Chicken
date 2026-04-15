@@ -25,7 +25,7 @@ class BirthdayCommand(commands.Cog):
     birthday_group = app_commands.Group(name="birthday", description="Manage birthdays", guild_ids=[1487902534545703072])
 
     @birthday_group.command(name="set", description="Set a users birthday")
-    @app_commands.default_permissions(administrator=True)
+    @app_commands.checks.has_permissions(administrator=True)
     async def birthday_set(self, interaction, date: str, user: discord.User = None):
         data = self.bot.data
         member = user or interaction.user
