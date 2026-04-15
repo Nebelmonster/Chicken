@@ -63,5 +63,9 @@ class BirthdayCommand(commands.Cog):
                 new_age = year  - data["birthdays"][member][0]
                 await self.bot.fetch_channel(1487902536147931271).send(f"{user.mention} turned {new_age}!! Happy Birthday!")
 
+    @check_birthdays.before_loop
+    async def before_create_backup(self):
+        await self.bot.wait_until_ready()
+
 async def setup(bot):
     await bot.add_cog(BirthdayCommand(bot))
