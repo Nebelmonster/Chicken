@@ -25,7 +25,7 @@ class BirthdayCommand(commands.Cog):
             data["birthdays"][member_id] = time.strptime(date, "%d.%m.%Y")
             with open("database.json", "w") as filee:
                 json.dump(data, filee, indent=4)
-            interaction.followup.send("Birthday set.", ephemeral=True)
+            await interaction.followup.send("Birthday set.", ephemeral=True)
 
 
 
