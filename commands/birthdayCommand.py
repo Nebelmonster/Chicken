@@ -19,9 +19,8 @@ def get_upcoming_birthdays(num: int, data):
 class BirthdayCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.birthday_group.guild_ids = [1487902534545703072]
 
-    birthday_group = app_commands.Group(name="birthday", description="Manage birthdays")
+    birthday_group = app_commands.Group(name="birthday", description="Manage birthdays", guild_ids=[1487902534545703072])
 
     @birthday_group.command(name="set", description="Set a users birthday")
     async def birthday_set(self, interaction, date: str, user: discord.User = None):
