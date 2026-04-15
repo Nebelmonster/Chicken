@@ -20,7 +20,7 @@ class BirthdayCommand(commands.Cog):
         data = self.bot.data
         member = user or interaction.user
         member_id = str(member.id)
-        await interaction.response.defer()
+        await interaction.response.defer(ephemeral=True)
         if action.value == "set":
             data["birthdays"][member_id] = time.strptime(date, "%d.%m.%Y")
             with open("database.json", "w") as filee:
