@@ -47,7 +47,7 @@ class BirthdayCommand(commands.Cog):
             current_user = self.bot.get_guild(1487902534545703072).get_member(int(user_id))
             ordinal = str(day[2]) + ("th" if 4 <= day[2] % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(day[2] % 10, "th"))
 
-            embed.add_field(name="", value=f"```\n{current_user.mention}:\n{calendar.month_name[day[1]]} {ordinal}\n```", inline=False)
+            embed.add_field(name=f"{current_user.global_name}", value=f"```\n{calendar.month_name[day[1]]} {ordinal}\n```", inline=False)
         await interaction.followup.send(embed=embed)
 
     @tasks.loop(time=datetime.time(hour=0))
