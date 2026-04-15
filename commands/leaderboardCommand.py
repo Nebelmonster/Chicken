@@ -21,30 +21,32 @@ def get_chicken_leaderboard(num: int, data):
 class LeaderboardCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-    @app_commands.command(name="leaderboard", description="Shows the leaderboard")
-    @app_commands.guilds(discord.Object(id=1487902534545703072))
-    @app_commands.choices(lb_type=[
-        app_commands.Choice(name="XP", value="xp"),
-        app_commands.Choice(name="Chicken", value="chicken")
-    ])
-    async def leaderboard_command(self, interaction, lb_type: app_commands.Choice[str]):
+
+    lb_group = app_commands.Group(name="leaderboard", description="Shows leaderboards", guild_ids=[1487902534545703072])
+
+    @lb_group.command(name="chicken", description="Shows the leaderboard")
+    async def leaderboard_chicken(self, interaction, lb_type: app_commands.Choice[str]):
         data = self.bot.data
         await interaction.response.defer()
-        if lb_type.value == "xp":
-            leaderboard = get_xp_leaderboard(5, data)
-            embed = discord.Embed(colour=Colour.purple(), title="XP Leaderboard")
-            for rank, (user_id, stats) in enumerate(leaderboard, start=1):
-                xp = stats["msgs"]["xp"]
-                level = get_level(user_id, data)
-                user_name = self.bot.get_user(int(user_id)).global_name
-                embed.add_field(name=f"{rank}. {user_name}", value=f"```\nLevel: {level} | XP: {xp}\n```", inline=False)
-        else:
-            leaderboard = get_chicken_leaderboard(5, data)
-            embed = discord.Embed(colour=Colour.purple(), title="Chicken Leaderboard")
-            for rank, (user_id, stats) in enumerate(leaderboard, start=1):
-                chicken = stats["chicken"]
-                user_name = self.bot.get_user(int(user_id)).global_name
-                embed.add_field(name=f"{rank}. {user_name}", value=f"```\n🐔: {chicken}\n```", inline=False)
+        leaderboard = get_chicken_leaderboard(5, data)
+        embed = discord.Embed(colour=Colour.purple(), title="Chicken Leaderboard")
+        for rank, (user_id, stats) in enumerate(leaderboard, start=1):
+            chicken = stats["chicken"]
+            user_name = self.bot.get_user(int(user_id)).global_name
+            embed.add_field(name=f"{rank}. {user_name}", value=f"```\n🐔: {chicken}\n```", inline=False)
+        await interaction.followup.send(embed=embed)
+
+    @lb_group.command(name="xp", description="Shows the leaderboard")
+    async def leaderboard_xp(self, interaction, lb_type: app_commands.Choice[str]):
+        data = self.bot.data
+        await interaction.response.defer()
+        leaderboard = get_xp_leaderboard(5, data)
+        embed = discord.Embed(colour=Colour.purple(), title="XP Leaderboard")
+        for rank, (user_id, stats) in enumerate(leaderboard, start=1):
+            xp = stats["msgs"]["xp"]
+            level = get_level(user_id, data)
+            user_name = self.bot.get_user(int(user_id)).global_name
+            embed.add_field(name=f"{rank}. {user_name}", value=f"```\nLevel: {level} | XP: {xp}\n```", inline=False)
         await interaction.followup.send(embed=embed)
 
 async def setup(bot):
