@@ -10,7 +10,7 @@ class BirthdayCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @app_commands.command(name="say", description="Lets the bot say something")
+    @app_commands.command(name="birthday", description="Birthday")
     @app_commands.guilds(discord.Object(id=1487902534545703072))
     @app_commands.choices(action=[
         app_commands.Choice(name="Set", value="set"),
@@ -25,6 +25,7 @@ class BirthdayCommand(commands.Cog):
             data["birthdays"][member_id] = time.strptime(date, "%d.%m.%Y")
             with open("database.json", "w") as filee:
                 json.dump(data, filee, indent=4)
+            interaction.followup.send("Birthday set.", ephemeral=True)
 
 
 
