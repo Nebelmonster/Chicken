@@ -1,7 +1,7 @@
 import json
-import math
 import random
 import time
+from utils import get_level, get_next_level_thresh
 
 import discord
 from discord import Colour
@@ -10,16 +10,6 @@ from discord.ext import commands
 MIN_XP = 3
 MAX_XP = 7
 COOLDOWN = 15
-
-def get_level(user_id, data):
-    xp = data["counters"][str(user_id)]["msgs"]["xp"]
-    return int(math.sqrt(xp / 160) + 1)
-
-
-def get_next_level_thresh(user_id,  data):
-    next_level = get_level(user_id, data) + 1
-    next_level_threshold = 160 * math.pow(next_level - 1, 2)
-    return int(next_level_threshold)
 
 class CounterSystem(commands.Cog):
     def __init__(self, bot):
