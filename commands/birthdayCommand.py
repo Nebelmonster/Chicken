@@ -9,9 +9,12 @@ from discord.ext import commands
 
 def get_upcoming_birthdays(num: int, data):
     birthdays = data["birthdays"]
-    current_month  = datetime.datetime.now().month
-    current_day = datetime.datetime.now().day
-    sorted_leaderboard = sorted(birthdays.items(), key=lambda x: (math.fabs(x[1][1] - current_month), math.fabs(x[1][2] - current_day)), reverse=True)
+    current  = datetime.datetime.now()
+    def func(m, d):
+        date = datetime.datetime(current.year, m, d)
+        if date < current: date = datetime.datetime(current.year + 1, m, d)
+        return date - current
+    sorted_leaderboard = sorted(birthdays.items(), key=lambda x: func(x[1][1], x[1][2]))
     return sorted_leaderboard[:num]
 
 class BirthdayCommand(commands.Cog):
