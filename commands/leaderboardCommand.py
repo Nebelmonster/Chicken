@@ -25,7 +25,7 @@ class LeaderboardCommand(commands.Cog):
     lb_group = app_commands.Group(name="leaderboard", description="Shows leaderboards", guild_ids=[1487902534545703072])
 
     @lb_group.command(name="chicken", description="Shows the leaderboard")
-    async def leaderboard_chicken(self, interaction, lb_type: app_commands.Choice[str]):
+    async def leaderboard_chicken(self, interaction):
         data = self.bot.data
         await interaction.response.defer()
         leaderboard = get_chicken_leaderboard(5, data)
@@ -37,7 +37,7 @@ class LeaderboardCommand(commands.Cog):
         await interaction.followup.send(embed=embed)
 
     @lb_group.command(name="xp", description="Shows the leaderboard")
-    async def leaderboard_xp(self, interaction, lb_type: app_commands.Choice[str]):
+    async def leaderboard_xp(self, interaction):
         data = self.bot.data
         await interaction.response.defer()
         leaderboard = get_xp_leaderboard(5, data)
