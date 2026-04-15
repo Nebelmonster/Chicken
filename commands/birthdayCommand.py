@@ -44,6 +44,9 @@ class BirthdayCommand(commands.Cog):
         birthdays = get_upcoming_birthdays(5, data)
         embed = discord.Embed(colour=Colour.purple(), title="Upcoming Birthdays")
         for (user_id, day) in birthdays:
+            if user_id == "740074152257388594":
+                embed.add_field(name="Chrissy", value="```\nAugust 23rd\n```", inline=False)
+                continue
             current_user = self.bot.get_guild(1487902534545703072).get_member(int(user_id))
             ordinal = str(day[2]) + ("th" if 4 <= day[2] % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(day[2] % 10, "th"))
 
@@ -59,9 +62,12 @@ class BirthdayCommand(commands.Cog):
 
         for member in data["birthdays"]:
             if data["birthdays"][member][1] == month and data["birthdays"][member][2] == day:
+                new_age = year - data["birthdays"][member][0]
+                if member == "740074152257388594":
+                    await self.bot.fetch_channel(1487902536147931271).send(f"Chrissy is turning {new_age}!! Happy Birthday!")
+                    continue
                 user = await self.bot.fetch_user(int(member))
-                new_age = year  - data["birthdays"][member][0]
-                await self.bot.fetch_channel(1487902536147931271).send(f"{user.mention} turned {new_age}!! Happy Birthday!")
+                await self.bot.fetch_channel(1487902536147931271).send(f"{user.mention} is turning {new_age}!! Happy Birthday!")
 
     @check_birthdays.before_loop
     async def before_create_backup(self):
