@@ -1,7 +1,6 @@
 import json
 import datetime
 import calendar
-import math
 
 import discord
 from discord import app_commands, Colour
@@ -20,6 +19,7 @@ def get_upcoming_birthdays(num: int, data):
 class BirthdayCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.birthday_group.guild_ids = [1487902534545703072]
 
     birthday_group = app_commands.Group(name="birthday", description="Manage birthdays")
 
