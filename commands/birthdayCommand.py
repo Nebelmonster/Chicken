@@ -63,11 +63,12 @@ class BirthdayCommand(commands.Cog):
         for member in data["birthdays"]:
             if data["birthdays"][member][1] == month and data["birthdays"][member][2] == day:
                 new_age = year - data["birthdays"][member][0]
+                channel = await self.bot.fetch_channel(1487902536147931268)
                 if member == "740074152257388594":
-                    await self.bot.fetch_channel(1487902536147931271).send(f"Chrissy is turning {new_age}!! Happy Birthday!")
+                    channel.send(f"Chrissy is turning {new_age}!! Happy Birthday!")
                     continue
                 user = await self.bot.fetch_user(int(member))
-                await self.bot.fetch_channel(1487902536147931271).send(f"{user.mention} is turning {new_age}!! Happy Birthday!")
+                channel.send(f"{user.mention} is turning {new_age}!! Happy Birthday!")
 
     @check_birthdays.before_loop
     async def before_create_backup(self):
