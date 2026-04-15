@@ -12,7 +12,7 @@ def get_upcoming_birthdays(num: int, data):
     current  = datetime.datetime.now()
     def func(m, d):
         date = datetime.datetime(current.year, m, d)
-        if date < current: date = datetime.datetime(current.year + 1, m, d)
+        #if date < current: date = datetime.datetime(current.year + 1, m, d)
         return date - current
     sorted_leaderboard = sorted(birthdays.items(), key=lambda x: func(x[1][1], x[1][2]))
     return sorted_leaderboard[:num]
