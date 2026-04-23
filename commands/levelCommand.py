@@ -18,10 +18,12 @@ class LevelCommand(commands.Cog):
             return
         id = member.id
         xp = data["counters"][str(id)]["msgs"]["xp"]
+        count = data["counters"][str(id)]["msgs"]["count"]
         embed = discord.Embed(colour=Colour.green(), title=f"{member.global_name}'s stats:")
         if str(id) in data["counters"]:
             embed.add_field(name="Level", value=f"```yaml\n{get_level(id, data)}\n```", inline=False)
             embed.add_field(name="XP", value=f"```yaml\n{xp}/{get_next_level_thresh(id, data)}\n```", inline=False)
+            embed.add_field(name="Messages", value=f"```yaml\n{count}\n```", inline=False)
             embed.add_field(name="🐔", value=f"```yaml\n{data["counters"][str(id)]["chicken"]}\n```", inline=False)
         else:
             embed.add_field(name="", value="```\nThis player has not sent a message in this server yet\n```")
