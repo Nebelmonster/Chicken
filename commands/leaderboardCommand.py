@@ -56,11 +56,11 @@ class LeaderboardCommand(commands.Cog):
         data = self.bot.data
         await interaction.response.defer()
         leaderboard = get_xp_leaderboard(5, data)
-        embed = discord.Embed(colour=Colour.purple(), title="XP Leaderboard")
+        embed = discord.Embed(colour=Colour.purple(), title="Message Leaderboard")
         for rank, (user_id, stats) in enumerate(leaderboard, start=1):
             count = stats["msgs"]["count"]
             user_name = self.bot.get_user(int(user_id)).global_name
-            embed.add_field(name=f"{rank}. {user_name}", value=f"```\nMessages sent: {count}\n```", inline=False)
+            embed.add_field(name=f"{rank}. {user_name}", value=f"```\nMessages: {count}\n```", inline=False)
         await interaction.followup.send(embed=embed)
 
 async def setup(bot):
