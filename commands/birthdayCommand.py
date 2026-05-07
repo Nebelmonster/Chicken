@@ -71,7 +71,7 @@ class BirthdayCommand(commands.Cog):
                 channel.send(f"{user.mention} is turning {new_age}!! Happy Birthday!")
 
     @check_birthdays.before_loop
-    async def before_create_backup(self):
+    async def before_check_birthdays(self):
         await self.bot.wait_until_ready()
 
 async def setup(bot):
