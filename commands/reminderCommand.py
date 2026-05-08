@@ -9,6 +9,7 @@ from discord.ext import commands, tasks
 class ReminderCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.check_reminders.start()
 
     @app_commands.command(name="remindme", description="Sets a reminder")
     @app_commands.guilds(discord.Object(id=1487902534545703072))
@@ -42,7 +43,6 @@ class ReminderCommand(commands.Cog):
 
     @tasks.loop(minutes=1)
     async def check_reminders(self):
-        print("Checking reminders")
         data = self.bot.data
         now = datetime.now()
         for iso in data["reminders"]:
