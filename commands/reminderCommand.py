@@ -52,10 +52,9 @@ class ReminderCommand(commands.Cog):
                 og_time = datetime.fromisoformat(data["reminders"][iso]["og_time"])
                 msg = data["reminders"][iso]["msg"]
                 user = await self.bot.fetch_user(int(data["reminders"][iso]["user"]))
-                channel = await self.bot.fetch_channel(1487902536147931271)
                 embed = discord.Embed(colour=Colour.purple(), title="Reminder", timestamp=og_time)
                 embed.add_field(name="", value=msg, inline=False)
-                await channel.send(embed=embed)
+                await user.send(embed=embed)
                 del data["reminders"][iso]
                 with open("database.json", "w") as filee:
                     json.dump(data, filee, indent=4)
