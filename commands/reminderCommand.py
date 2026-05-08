@@ -37,6 +37,7 @@ class ReminderCommand(commands.Cog):
         data["reminders"][iso] = {}
         data["reminders"][iso]["msg"] = msg
         data["reminders"][iso]["user"] = str(interaction.user.id)
+        data["reminders"][iso]["time"] = now.isoformat()
         with open("database.json", "w") as filee:
             json.dump(data, filee, indent=4)
         await interaction.followup.send("Reminder set!")
@@ -49,10 +50,11 @@ class ReminderCommand(commands.Cog):
         for iso in data["reminders"]:
             then = datetime.fromisoformat(iso)
             if then <= now:
+                og_time = datetime.fromisoformat(data["reminders"][iso]["time"])
                 msg = data["reminders"][iso]["msg"]
                 user = await self.bot.fetch_user(int(data["reminders"][iso]["user"]))
                 channel = await self.bot.fetch_channel(1487902536147931271)
-                embed = discord.Embed(colour=Colour.purple(), title="Reminder")
+                embed = discord.Embed(colour=Colour.purple(), title="Reminder", timestamp=og_time)
                 embed.add_field(name="", value=msg, inline=False)
                 await channel.send(embed=embed)
 
