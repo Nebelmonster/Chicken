@@ -40,7 +40,7 @@ class ReminderCommand(commands.Cog):
         data["reminders"][iso]["og_time"] = now.isoformat()
         with open("database.json", "w") as filee:
             json.dump(data, filee, indent=4)
-        await interaction.followup.send("Reminder set!")
+        await interaction.followup.send("Reminder set! I will DM you ^^")
 
     @tasks.loop(minutes=1)
     async def check_reminders(self):
