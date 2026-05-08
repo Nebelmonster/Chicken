@@ -52,7 +52,7 @@ class ReminderCommand(commands.Cog):
                 msg = data["reminders"][iso]["msg"]
                 user = await self.bot.fetch_user(int(data["reminders"][iso]["user"]))
                 channel = await self.bot.fetch_channel(1487902536147931271)
-                embed = discord.Embed(colour=Colour.purple(), title="Upcoming Birthdays")
+                embed = discord.Embed(colour=Colour.purple(), title="Reminder")
                 embed.add_field(name="", value=msg, inline=False)
                 await channel.send(embed=embed)
 
