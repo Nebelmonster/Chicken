@@ -43,6 +43,7 @@ class ReminderCommand(commands.Cog):
 
     @tasks.loop(minutes=1)
     async def check_reminders(self):
+        print("Checking reminders...")
         data = self.bot.data
         now = datetime.now()
         for iso in data["reminders"]:
