@@ -68,7 +68,7 @@ class BirthdayCommand(commands.Cog):
                     channel.send(f"Chrissy is turning {new_age}!! Happy Birthday!")
                     continue
                 user = await self.bot.fetch_user(int(member))
-                channel.send(f"{user.mention} is turning {new_age}!! Happy Birthday!")
+                await channel.send(f"{user.mention} is turning {new_age}!! Happy Birthday!")
 
     @check_birthdays.before_loop
     async def before_check_birthdays(self):

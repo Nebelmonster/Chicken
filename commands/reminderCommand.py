@@ -50,8 +50,8 @@ class ReminderCommand(commands.Cog):
             then = datetime.fromisoformat(iso)
             if then <= now:
                 msg = data["reminders"][iso]["msg"]
-                user = self.bot.fetch_user(int(data["reminders"][iso]["user"]))
-                channel = self.bot.fetch_channel(1487902536147931271)
+                user = await self.bot.fetch_user(int(data["reminders"][iso]["user"]))
+                channel = await self.bot.fetch_channel(1487902536147931271)
                 embed = discord.Embed(colour=Colour.purple(), title="Upcoming Birthdays")
                 embed.add_field(name="", value=msg, inline=False)
                 await channel.send(embed=embed)
