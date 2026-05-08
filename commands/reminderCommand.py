@@ -57,6 +57,10 @@ class ReminderCommand(commands.Cog):
                 embed = discord.Embed(colour=Colour.purple(), title="Reminder", timestamp=og_time)
                 embed.add_field(name="", value=msg, inline=False)
                 await channel.send(embed=embed)
+                del data["reminders"][iso]
+                with open("database.json", "w") as filee:
+                    json.dump(data, filee, indent=4)
+
 
 
     @check_reminders.before_loop
