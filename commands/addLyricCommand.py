@@ -22,7 +22,10 @@ class AddLyricCommand(commands.Cog):
         genius.remove_section_headers = True
         song = genius.search_song(song, artist)
         if song:
-            await interaction.followup.send(song.lyrics)
+            lyrics = song.lyrics.split("\n")
+            await interaction.followup.send(lyrics[0])
+        else:
+            await interaction.followup.send("Song not found")
 
 async def setup(bot):
     await bot.add_cog(AddLyricCommand(bot))
