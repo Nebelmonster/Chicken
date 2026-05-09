@@ -1,5 +1,5 @@
-import json
 import random
+import lyricsgenius
 
 from discord.ext import commands
 
@@ -14,11 +14,16 @@ class LyricReactionSystem(commands.Cog):
             return
         if message.guild is None:
             return
-        with open("lyrics.json", "r") as file:
-            data = json.load(file)
-        for song in data:
+        data = self.bot.data
+        songs = data
+        for song in songs:
+            title = song.split(" - ")[0]
+            artist = song.split(" - ")[1]
             if song in message.content.lower():
-                lines = data[song]
+                token = "83lKwQdp5pfGc3e2o7PdOFvsAmKngN583fZY3eWtxcEVLH3Rm4eswujKYElmNm8b"
+                genius = lyricsgenius.Genius(token)
+                genius.remove_section_headers = True
+                lines = genius.search_song(title, artist).lyrics.split("\n")
                 rand = random.randrange(0, len(lines))
                 await message.channel.send(lines[rand])
 
