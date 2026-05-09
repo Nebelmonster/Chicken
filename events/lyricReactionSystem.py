@@ -21,8 +21,6 @@ class LyricReactionSystem(commands.Cog):
                 lines = data[song]
                 rand = random.randrange(0, len(lines))
                 await message.channel.send(lines[rand])
-                with open("lyrics.json", "w") as filee:
-                    json.dump(data, filee, indent=4)
 
 
 async def setup(bot):
