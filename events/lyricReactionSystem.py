@@ -14,14 +14,15 @@ class LyricReactionSystem(commands.Cog):
             return
         if message.guild is None:
             return
-        if "heavenly" in message.content.lower():
-            with open("heavenly.json", "r") as file:
-                data = json.load(file)
-            lines = data["lyrics"]
-            rand = random.randrange(0, len(lines))
-            await message.channel.send(lines[rand])
-            with open("heavenly.json", "w") as filee:
-                json.dump(data, filee, indent=4)
+        with open("lyrics.json", "r") as file:
+            data = json.load(file)
+        for song in data:
+            if song in message.content.lower():
+                lines = data[song]
+                rand = random.randrange(0, len(lines))
+                await message.channel.send(lines[rand])
+                with open("lyrics.json", "w") as filee:
+                    json.dump(data, filee, indent=4)
 
 
 async def setup(bot):
