@@ -26,6 +26,7 @@ async def my_setup():
     await bot.load_extension("events.counterSystem")
     await bot.load_extension("events.submissionSystem")
     await bot.load_extension("events.reviewRatingSystem")
+    await bot.load_extension("events.lyricReactionSystem")
     await bot.load_extension("commands.endCommand")
     await bot.load_extension("commands.leaderboardCommand")
     await bot.load_extension("commands.levelCommand")
