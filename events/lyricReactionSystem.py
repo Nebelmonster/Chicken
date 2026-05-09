@@ -19,7 +19,7 @@ class LyricReactionSystem(commands.Cog):
                 data = json.load(file)
             lines = data["lyrics"]
             rand = random.randrange(0, len(lines))
-            await message.reply(lines[rand])
+            await message.channel.send(lines[rand])
             with open("heavenly.json", "w") as filee:
                 json.dump(data, filee, indent=4)
 
