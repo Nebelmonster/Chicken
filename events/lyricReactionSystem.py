@@ -15,7 +15,7 @@ class LyricReactionSystem(commands.Cog):
         if message.guild is None:
             return
         data = self.bot.data
-        songs = data
+        songs = data["songs"]
         for song in songs:
             title = song.split(" - ")[0]
             artist = song.split(" - ")[1]
