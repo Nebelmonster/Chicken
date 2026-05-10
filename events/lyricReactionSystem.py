@@ -24,6 +24,7 @@ class LyricReactionSystem(commands.Cog):
                 genius = lyricsgenius.Genius(token)
                 genius.remove_section_headers = True
                 lines = genius.search_song(title, artist).lyrics.split("\n")
+                lines.remove("")
                 rand = random.randrange(0, len(lines))
                 await message.channel.send(lines[rand])
 
