@@ -3,6 +3,13 @@ import lyricsgenius
 
 from discord.ext import commands
 
+def get_line_index(lines, length):
+    rand = random.randrange(0, length)
+    if lines[rand] == "":
+        lines.pop(rand)
+        return get_line_index(lines, length - 1)
+    else:
+        return rand
 
 class LyricReactionSystem(commands.Cog):
     def __init__(self, bot):
@@ -24,9 +31,8 @@ class LyricReactionSystem(commands.Cog):
                 genius = lyricsgenius.Genius(token)
                 genius.remove_section_headers = True
                 lines = genius.search_song(title, artist).lyrics.split("\n")
-                lines_cleaned = [l for l in lines if l != ""]
-                rand = random.randrange(0, len(lines_cleaned))
-                await message.channel.send(lines_cleaned[rand])
+                line_index = get_line_index(lines, len(lines))
+                await message.channel.send(lines[line_index])
 
 
 async def setup(bot):
