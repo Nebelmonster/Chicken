@@ -12,7 +12,7 @@ class AddLyricCommand(commands.Cog):
     group = app_commands.Group(name="lyric", description="Adds or removes songs", guild_ids=[1487902534545703072])
 
     @group.command(name="add", description="Adds a song")
-    @app_commands.default_permissions(administrator=True)
+    @app_commands.checks.has_permissions(administrator=True)
     async def add_command(self, interaction, song: str, artist: str):
         await interaction.response.defer()
         data = self.bot.data
@@ -22,7 +22,7 @@ class AddLyricCommand(commands.Cog):
         await interaction.followup.send(f"Added {song.lower()} by {artist.lower()}")
 
     @group.command(name="remove", description="Adds a song")
-    @app_commands.default_permissions(administrator=True)
+    @app_commands.checks.has_permissions(administrator=True)
     async def add_command(self, interaction, song: str, artist: str):
         await interaction.response.defer()
         data = self.bot.data
