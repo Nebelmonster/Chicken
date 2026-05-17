@@ -5,7 +5,7 @@ from discord.ext import commands
 
 def get_line_index(lines, length):
     rand = random.randrange(0, length)
-    if lines[rand] == "":
+    if lines[rand] == "" or lines[rand] == ")" or lines[rand] == "(":
         lines.pop(rand)
         return get_line_index(lines, length - 1)
     else:
@@ -32,6 +32,7 @@ class LyricReactionSystem(commands.Cog):
                 genius.remove_section_headers = True
                 lines = genius.search_song(title, artist).lyrics.split("\n")
                 line_index = get_line_index(lines, len(lines))
+                line = lines[line_index].replace("(", "").replace(")", "")
                 await message.channel.send(lines[line_index])
 
 
