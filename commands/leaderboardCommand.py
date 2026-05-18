@@ -55,7 +55,7 @@ class LeaderboardCommand(commands.Cog):
     async def leaderboard_xp(self, interaction):
         data = self.bot.data
         await interaction.response.defer()
-        leaderboard = get_xp_leaderboard(5, data)
+        leaderboard = get_msg_leaderboard(5, data)
         embed = discord.Embed(colour=Colour.purple(), title="Message Leaderboard")
         for rank, (user_id, stats) in enumerate(leaderboard, start=1):
             count = stats["msgs"]["count"]
