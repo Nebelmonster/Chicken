@@ -80,7 +80,7 @@ class AddLyricCommand(commands.Cog):
                         data["songs"].remove(f"{song.lower()} - {label_value.lower()}")
                         with open("database.json", "w") as filee:
                             json.dump(data, filee, indent=4)
-                        await b_interaction.response.edit_message(f"Removed {song.lower()} by {label_value.lower()}", view=None)
+                        await b_interaction.response.edit_message(content=f"Removed {song.lower()} by {label_value.lower()}", view=None)
                     return callback
             await interaction.followup.send("Found multiple songs with that title in the database.\nWhich one do you want to remove?", view=artistB(data))
 
