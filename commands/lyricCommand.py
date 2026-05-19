@@ -24,13 +24,13 @@ class AddLyricCommand(commands.Cog):
                         data["songs"].append(f"{song.lower()} - {artist.lower()}")
                         with open("database.json", "w") as filee:
                             json.dump(data, filee, indent=4)
-                        for b in b_interaction.components:
+                        for b in b_interaction.message.components:
                             if b.type == discord.InteractionButton:
                                 b.disabled = True
                         await b_interaction.followup.send(f"Added {song.lower()} by {artist.lower()}")
                     @discord.ui.button(label="No", style=discord.ButtonStyle.red)
                     async def on_no(self, b_interaction, button):
-                        for b in b_interaction.components:
+                        for b in b_interaction.message.components:
                             if b.type == discord.InteractionButton:
                                 b.disabled = True
                         await b_interaction.followup.send("Song has been discarded")
