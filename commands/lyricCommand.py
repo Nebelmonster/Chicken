@@ -16,9 +16,7 @@ class AddLyricCommand(commands.Cog):
         await interaction.response.defer()
         data = self.bot.data
         for s in data["songs"]:
-            if s.contains(f"{song.lower()} - "):
-                data["songs"].remove(s)
-                artist = song.split(" - ")[1]
+            if f"{song.lower()} - " in s:
 
                 class Confirm(discord.ui.View):
                     @discord.ui.button(label="Yes", style=discord.ButtonStyle.green)
@@ -46,7 +44,7 @@ class AddLyricCommand(commands.Cog):
         data = self.bot.data
         artist = ""
         for s in data["songs"]:
-            if s.contains(f"{song.lower()} - "):
+            if f"{song.lower()} - " in s:
                 data["songs"].remove(s)
                 artist = song.split(" - ")[1]
                 break
