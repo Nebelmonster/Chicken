@@ -32,7 +32,7 @@ class LyricReactionSystem(commands.Cog):
                 genius.remove_section_headers = True
                 lines = genius.search_song(title, artist).lyrics.split("\n")
                 line_index = get_line_index(lines, len(lines))
-                line = lines[line_index].replace("(", "").replace(")", "")
+                line = lines[line_index]
                 await message.channel.send(lines[line_index])
 
 
