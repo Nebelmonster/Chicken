@@ -48,12 +48,38 @@ class AddLyricCommand(commands.Cog):
         await interaction.response.defer()
         data = self.bot.data
         artist = ""
+        match_list = []
         for s in data["songs"]:
             if f"{song.lower()} - " in s:
-                data["songs"].remove(s)
-                artist = s.split(" - ")[1]
-                break
-        if artist == "":
+                match_list.append(s)
+        length = len(match_list)
+        if length == 1:
+            data["songs"].remove(match_list[0])
+            artist = match_list[0].split(" - ")[1]
+        elif length >= 2:
+
+            class artistB(discord.ui.View):
+                def __init__(self, data):
+                    super().__init__()
+                    self.data = data
+
+                    for i, x in enumerate(match_list):
+                        button = discord.ui.Button(
+                            label=x.split(" - ")[1],
+                            style=discord.ButtonStyle.green,
+                            custom_id=f"rate_button_{i}"
+                        )
+                        button.callback = self.create_callback(i, button)
+                        self.add_item(button)
+
+                def create_callback(self, label_value, button):
+                    async def callback(interaction: discord.Interaction):
+                        data["songs"].remove(f"{song.lower()} - {label_value.lower()}")
+                        await interaction.response.edit_message(f"Removed {song.lower()} by {label_value.lower()}", view=None)
+                    return callback
+            await interaction.followup.send("Found multiple songs with that title in the database.\nWhich one do you want to remove?", view=artistB(data))
+
+        else:
             await interaction.followup.send("No song with that title in the database")
             return
         with open("database.json", "w") as filee:
