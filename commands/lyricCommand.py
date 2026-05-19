@@ -22,19 +22,26 @@ class AddLyricCommand(commands.Cog):
                 class Confirm(discord.ui.View):
                     @discord.ui.button(label="Yes", style=discord.ButtonStyle.green)
                     async def on_yes(self, b_interaction, button):
+                        if b_interaction.user != interaction.user:
+                            return
                         data["songs"].append(f"{song.lower()} - {artist.lower()}")
                         with open("database.json", "w") as filee:
                             json.dump(data, filee, indent=4)
-                        button.disabled = True
-                        await interaction.edit_original_response(view=None)
+                        await interaction.message.delete()
                         await b_interaction.response.send_message(content=f"Added {song.lower()} by {artist.lower()}")
                     @discord.ui.button(label="No", style=discord.ButtonStyle.red)
                     async def on_no(self, b_interaction, button):
-                        await interaction.edit_original_response(view=None)
+                        if b_interaction.user != interaction.user:
+                            return
+                        await interaction.message.delete()
                         await b_interaction.response.send_message("Song discarded.", ephemeral=True)
 
-                await interaction.followup.send(f"A song with that title already exists in the database:\n`{song.lower()} by {artist_old.lower()}`\nDo you still want to proceed?", view=Confirm(), ephemeral=True)
-
+                await interaction.followup.send(f"A song with that title already exists in the database:\n`{song.lower()} by {artist_old.lower()}`\nDo you still want to proceed?", view=Confirm())
+                return
+        data["songs"].append(f"{song.lower()} - {artist.lower()}")
+        with open("database.json", "w") as filee:
+            json.dump(data, filee, indent=4)
+        await interaction.followup.send(content=f"Added {song.lower()} by {artist.lower()}")
     @group.command(name="remove", description="Adds a song")
     @app_commands.checks.has_permissions(administrator=True)
     async def add_command(self, interaction, song: str):
