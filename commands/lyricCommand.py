@@ -72,7 +72,7 @@ class AddLyricCommand(commands.Cog):
                             style=discord.ButtonStyle.green,
                             custom_id=f"rate_button_{i}"
                         )
-                        button.callback = self.create_callback(i, button)
+                        button.callback = self.create_callback(x.split(" - ")[1], button)
                         self.add_item(button)
 
                 def create_callback(self, label_value, button):
