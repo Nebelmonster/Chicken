@@ -56,6 +56,9 @@ class AddLyricCommand(commands.Cog):
         if length == 1:
             data["songs"].remove(match_list[0])
             artist = match_list[0].split(" - ")[1]
+            with open("database.json", "w") as filee:
+                json.dump(data, filee, indent=4)
+            await interaction.followup.send(f"Removed {song.lower()} by {artist.lower()}")
         elif length >= 2:
 
             class artistB(discord.ui.View):
@@ -75,6 +78,8 @@ class AddLyricCommand(commands.Cog):
                 def create_callback(self, label_value, button):
                     async def callback(b_interaction: discord.Interaction):
                         data["songs"].remove(f"{song.lower()} - {label_value.lower()}")
+                        with open("database.json", "w") as filee:
+                            json.dump(data, filee, indent=4)
                         await b_interaction.response.edit_message(f"Removed {song.lower()} by {label_value.lower()}", view=None)
                     return callback
             await interaction.followup.send("Found multiple songs with that title in the database.\nWhich one do you want to remove?", view=artistB(data))
@@ -82,9 +87,6 @@ class AddLyricCommand(commands.Cog):
         else:
             await interaction.followup.send("No song with that title in the database")
             return
-        with open("database.json", "w") as filee:
-            json.dump(data, filee, indent=4)
-        await interaction.followup.send(f"Removed {song.lower()} by {artist.lower()}")
 
 async def setup(bot):
     await bot.add_cog(AddLyricCommand(bot))
