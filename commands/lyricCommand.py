@@ -29,7 +29,7 @@ class AddLyricCommand(commands.Cog):
                                 b.disabled = True
                         await b_interaction.followup.send(f"Added {song.lower()} by {artist.lower()}")
                     @discord.ui.button(label="No", style=discord.ButtonStyle.red)
-                    async def on_yes(self, b_interaction, button):
+                    async def on_no(self, b_interaction, button):
                         for b in b_interaction.components:
                             if b.type == discord.InteractionButton:
                                 b.disabled = True
