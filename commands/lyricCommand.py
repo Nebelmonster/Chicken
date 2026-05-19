@@ -17,6 +17,7 @@ class AddLyricCommand(commands.Cog):
         data = self.bot.data
         for s in data["songs"]:
             if f"{song.lower()} - " in s:
+                artist_old = s.split(" - ")[1]
 
                 class Confirm(discord.ui.View):
                     @discord.ui.button(label="Yes", style=discord.ButtonStyle.green)
@@ -27,15 +28,15 @@ class AddLyricCommand(commands.Cog):
                         for b in b_interaction.message.components:
                             if b.type == discord.Button:
                                 b.disabled = True
-                        await b_interaction.followup.send(f"Added {song.lower()} by {artist.lower()}")
+                        await b_interaction.response.send_message(f"Added {song.lower()} by {artist.lower()}")
                     @discord.ui.button(label="No", style=discord.ButtonStyle.red)
                     async def on_no(self, b_interaction, button):
                         for b in b_interaction.message.components:
                             if b.type == discord.Button:
                                 b.disabled = True
-                        await b_interaction.followup.send("Song has been discarded")
+                        await b_interaction.response.send_message("Song has been discarded")
 
-                await interaction.followup.send(f"A song with that title already exists in the database: {song.lower()} by {artist.lower()}. Do you still want to proceed?", view=Confirm())
+                await interaction.followup.send(f"A song with that title already exists in the database:\n`{song.lower()} by {artist_old.lower()}`\nDo you still want to proceed?", view=Confirm())
 
     @group.command(name="remove", description="Adds a song")
     @app_commands.checks.has_permissions(administrator=True)
