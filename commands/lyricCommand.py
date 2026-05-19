@@ -34,7 +34,7 @@ class AddLyricCommand(commands.Cog):
                         if b_interaction.user != interaction.user:
                             return
                         await b_interaction.message.delete()
-                        await b_interaction.response.send_message("Song discarded.", ephemeral=True)
+                        await b_interaction.response.send_message("Song discarded.")
 
                 await interaction.followup.send(f"A song with that title already exists in the database:\n`{song.lower()} by {artist_old.lower()}`\nDo you still want to proceed?", view=Confirm())
                 return
