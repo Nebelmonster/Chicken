@@ -15,6 +15,9 @@ class AddLyricCommand(commands.Cog):
     async def add_command(self, interaction, song: str, artist: str):
         await interaction.response.defer()
         data = self.bot.data
+        if artist.lower() == "taylor swift":
+            await interaction.followup.send("Fuck you. Jumpy is mine now!!")
+            return
         for s in data["songs"]:
             if f"{song.lower()} - " in s:
                 artist_old = s.split(" - ")[1]
@@ -77,6 +80,8 @@ class AddLyricCommand(commands.Cog):
 
                 def create_callback(self, label_value, button):
                     async def callback(b_interaction: discord.Interaction):
+                        if b_interaction.user != interaction.user:
+                            return
                         data["songs"].remove(f"{song.lower()} - {label_value.lower()}")
                         with open("database.json", "w") as filee:
                             json.dump(data, filee, indent=4)
