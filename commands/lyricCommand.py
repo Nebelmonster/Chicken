@@ -26,10 +26,12 @@ class AddLyricCommand(commands.Cog):
                         with open("database.json", "w") as filee:
                             json.dump(data, filee, indent=4)
                         button.disabled = True
-                        await interaction.edit_original_response(content=f"Added {song.lower()} by {artist.lower()}")
+                        await interaction.edit_original_response(view=None)
+                        await b_interaction.response.send_message(content=f"Added {song.lower()} by {artist.lower()}")
                     @discord.ui.button(label="No", style=discord.ButtonStyle.red)
                     async def on_no(self, b_interaction, button):
-                        await interaction.edit_original_response(content="Song has been discarded")
+                        await interaction.edit_original_response(view=None)
+                        await b_interaction.response.send_message("Song discarded.", ephemeral=True)
 
                 await interaction.followup.send(f"A song with that title already exists in the database:\n`{song.lower()} by {artist_old.lower()}`\nDo you still want to proceed?", view=Confirm(), ephemeral=True)
 
