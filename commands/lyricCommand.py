@@ -51,7 +51,7 @@ class AddLyricCommand(commands.Cog):
         for s in data["songs"]:
             if f"{song.lower()} - " in s:
                 data["songs"].remove(s)
-                artist = song.split(" - ")[1]
+                artist = s.split(" - ")[1]
                 break
         if artist == "":
             await interaction.followup.send("No song with that title in the database")
