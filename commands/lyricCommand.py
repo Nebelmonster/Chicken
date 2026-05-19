@@ -22,22 +22,16 @@ class AddLyricCommand(commands.Cog):
                 class Confirm(discord.ui.View):
                     @discord.ui.button(label="Yes", style=discord.ButtonStyle.green)
                     async def on_yes(self, b_interaction, button):
-                        if b_interaction.user.id != interaction.user.id:
-                            await b_interaction.response.send_message("You can't interact with this", ephemeral=True)
-                            return
                         data["songs"].append(f"{song.lower()} - {artist.lower()}")
                         with open("database.json", "w") as filee:
                             json.dump(data, filee, indent=4)
                         button.disabled = True
-                        await b_interaction.edit_original_response(content=f"Added {song.lower()} by {artist.lower()}")
+                        await interaction.edit_original_response(content=f"Added {song.lower()} by {artist.lower()}")
                     @discord.ui.button(label="No", style=discord.ButtonStyle.red)
                     async def on_no(self, b_interaction, button):
-                        if b_interaction.user.id != interaction.user.id:
-                            await b_interaction.response.send_message("You can't interact with this", ephemeral=True)
-                            return
-                        await b_interaction.edit_original_response(content="Song has been discarded")
+                        await interaction.edit_original_response(content="Song has been discarded")
 
-                await interaction.followup.send(f"A song with that title already exists in the database:\n`{song.lower()} by {artist_old.lower()}`\nDo you still want to proceed?", view=Confirm())
+                await interaction.followup.send(f"A song with that title already exists in the database:\n`{song.lower()} by {artist_old.lower()}`\nDo you still want to proceed?", view=Confirm(), ephemeral=True)
 
     @group.command(name="remove", description="Adds a song")
     @app_commands.checks.has_permissions(administrator=True)
