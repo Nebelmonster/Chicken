@@ -18,7 +18,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
-bot = commands.Bot(command_prefix='!', intents=intents, status=discord.Status.dnd, activity=discord.Streaming(name="Dead Man Walking", url="https://youtu.be/HxvPGTcWjsg?si=xmLv6rfOpRRA4u-9"))
+bot = commands.Bot(command_prefix='!', intents=intents, activity=discord.Streaming(name="Dead Man Walking", url="https://youtu.be/HxvPGTcWjsg?si=xmLv6rfOpRRA4u-9"))
 tree = bot.tree
 bot.data = data
 
