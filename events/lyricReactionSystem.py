@@ -30,13 +30,13 @@ class LyricReactionSystem(commands.Cog):
             artist = song.split(" - ")[1]
 
             if " " + title + " " in message.content.lower() or message.content.lower().startswith(title + " ") or message.content.lower().endswith(" " + title) or message.content.lower() == title:
-                await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=title))
                 token = "83lKwQdp5pfGc3e2o7PdOFvsAmKngN583fZY3eWtxcEVLH3Rm4eswujKYElmNm8b"
                 genius = lyricsgenius.Genius(token)
                 genius.remove_section_headers = True
                 lines = genius.search_song(title, artist).lyrics.split("\n")
                 line_index = get_line_index(lines, len(lines))
                 await message.channel.send(lines[line_index])
+                await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=title))
 
 
 async def setup(bot):
