@@ -24,7 +24,18 @@ class BirthdayCommand(commands.Cog):
 
     birthday_group = app_commands.Group(name="birthday", description="Manage birthdays", guild_ids=[1487902534545703072])
 
-    @birthday_group.command(name="set", description="Set a users birthday")
+    @birthday_group.command(name="remove", description="Removes a user's birthday")
+    @app_commands.checks.has_permissions(administrator=True)
+    async def birthday_set(self, interaction, date: str, user: discord.User):
+        data = self.bot.data
+        member_id = str(user.id)
+        await interaction.response.defer()
+        data["birthdays"].remove(member_id)
+        with open("database.json", "w") as filee:
+            json.dump(data, filee, indent=4)
+        await interaction.followup.send("Birthday set")
+
+    @birthday_group.command(name="set", description="Set a user's birthday")
     @app_commands.checks.has_permissions(administrator=True)
     async def birthday_set(self, interaction, date: str, user: discord.User = None):
         data = self.bot.data

@@ -15,9 +15,6 @@ class AddLyricCommand(commands.Cog):
     async def add_command(self, interaction, song: str, artist: str):
         await interaction.response.defer()
         data = self.bot.data
-        if artist.lower() == "taylor swift":
-            await interaction.followup.send("Fuck you. Jumpy is mine now!!")
-            return
         for s in data["songs"]:
             if f"{song.lower()} - " in s:
                 artist_old = s.split(" - ")[1]
