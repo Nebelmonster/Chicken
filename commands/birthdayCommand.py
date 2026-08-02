@@ -26,7 +26,7 @@ class BirthdayCommand(commands.Cog):
 
     @birthday_group.command(name="remove", description="Removes a user's birthday")
     @app_commands.checks.has_permissions(administrator=True)
-    async def birthday_set(self, interaction, date: str, user: discord.User):
+    async def birthday_set(self, interaction, user: discord.User):
         data = self.bot.data
         member_id = str(user.id)
         await interaction.response.defer()
