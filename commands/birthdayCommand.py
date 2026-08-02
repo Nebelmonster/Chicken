@@ -30,7 +30,7 @@ class BirthdayCommand(commands.Cog):
         data = self.bot.data
         member_id = str(user.id)
         await interaction.response.defer()
-        data["birthdays"][member_id] = None
+        del(data["birthdays"][member_id])
         with open("database.json", "w") as filee:
             json.dump(data, filee, indent=4)
         await interaction.followup.send("Birthday removed")
