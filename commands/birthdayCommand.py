@@ -33,7 +33,7 @@ class BirthdayCommand(commands.Cog):
         data["birthdays"].remove(member_id)
         with open("database.json", "w") as filee:
             json.dump(data, filee, indent=4)
-        await interaction.followup.send("Birthday set")
+        await interaction.followup.send("Birthday removed")
 
     @birthday_group.command(name="set", description="Set a user's birthday")
     @app_commands.checks.has_permissions(administrator=True)
