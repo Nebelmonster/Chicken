@@ -72,8 +72,9 @@ class BirthdayCommand(commands.Cog):
         day = datetime.datetime.now().day
 
         for member in data["birthdays"]:
+            print(f"Today: {day}.{month}.{year}\n")
+            print(f"Member: {data["birthdays"][member][2]}.{data["birthdays"][member][1]}\n")
             if data["birthdays"][member][1] == month and data["birthdays"][member][2] == day:
-                print("test2")
                 new_age = year - data["birthdays"][member][0]
                 channel = await self.bot.fetch_channel(1487902536147931268)
                 if member == "740074152257388594":
