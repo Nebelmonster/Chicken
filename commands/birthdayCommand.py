@@ -66,7 +66,6 @@ class BirthdayCommand(commands.Cog):
 
     @tasks.loop(seconds=5)
     async def check_birthdays(self):
-        print("test")
         data = self.bot.data
         year = datetime.datetime.now().year
         month = datetime.datetime.now().month
@@ -74,6 +73,7 @@ class BirthdayCommand(commands.Cog):
 
         for member in data["birthdays"]:
             if data["birthdays"][member][1] == month and data["birthdays"][member][2] == day:
+                print("test2")
                 new_age = year - data["birthdays"][member][0]
                 channel = await self.bot.fetch_channel(1487902536147931268)
                 if member == "740074152257388594":
