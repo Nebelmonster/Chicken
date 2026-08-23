@@ -64,7 +64,7 @@ class BirthdayCommand(commands.Cog):
             embed.add_field(name=f"{current_user.global_name}", value=f"```\n{calendar.month_name[day[1]]} {ordinal}\n```", inline=False)
         await interaction.followup.send(embed=embed)
 
-    @tasks.loop(seconds=5)
+    @tasks.loop(time=datetime.time(hour=0))
     async def check_birthdays(self):
         data = self.bot.data
         year = datetime.datetime.now().year
